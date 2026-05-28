@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <rect width="100%" height="100%" fill="#FFE0B2"/>
+  <circle cx="400" cy="280" r="120" fill="#071B2A" opacity="0.9"/>
+  <rect x="220" y="420" width="360" height="420" rx="40" fill="#071B2A" opacity="0.9"/>
+  <text x="50%" y="960" font-family="Poppins, sans-serif" font-size="36" fill="#071B2A" text-anchor="middle">CM Photo Placeholder 1</text>
+</svg>
