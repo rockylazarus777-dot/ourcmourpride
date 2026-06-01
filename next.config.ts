@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 import path from "path";
 
+const isVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
+
 const nextConfig: NextConfig = {
-  /* Silence the multiple-lockfile workspace-root warning */
-  outputFileTracingRoot: path.join(process.cwd(), ".."),
+  /* Silence the multiple-lockfile workspace-root warning — only locally */
+  ...(isVercel ? {} : { outputFileTracingRoot: path.join(process.cwd(), "..") }),
   images: {
     remotePatterns: [
       {
