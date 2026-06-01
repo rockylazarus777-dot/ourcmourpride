@@ -10,7 +10,7 @@ const navLinks = [
   { label: "HOME", href: "/" },
   { label: "ABOUT CM", href: "/about" },
   { label: "VISION", href: "/vision" },
-  { label: "INITIATIVES", href: "/initiatives" },
+  { label: "EVENTS", href: "/events" },
   { label: "GALLERY", href: "/gallery" },
   { label: "NEWS", href: "/news" },
   { label: "CONTACT", href: "/contact" },
@@ -92,10 +92,10 @@ export default function Navbar() {
               </div>
               <div className="leading-tight">
                 <p className="font-poppins font-bold text-sm md:text-base text-navy leading-none">
-                  MY CM
+                  OUR CM
                 </p>
                 <p className="font-poppins font-bold text-sm md:text-base text-primary leading-none">
-                  MY PRIDE
+                  OUR PRIDE
                 </p>
               </div>
             </Link>
@@ -192,8 +192,8 @@ export default function Navbar() {
                     <span className="text-white font-bold text-xs">MC</span>
                   </div>
                   <div>
-                    <p className="font-poppins font-bold text-sm text-navy leading-none">MY CM</p>
-                    <p className="font-poppins font-bold text-sm text-primary leading-none">MY PRIDE</p>
+                    <p className="font-poppins font-bold text-sm text-navy leading-none">OUR CM</p>
+                    <p className="font-poppins font-bold text-sm text-primary leading-none">OUR PRIDE</p>
                   </div>
                 </div>
                 <button

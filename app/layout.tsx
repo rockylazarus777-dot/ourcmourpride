@@ -17,7 +17,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "My CM My Pride | Strong Leadership. Brighter Future.",
+  title: "OUR CM OUR PRIDE | Strong Leadership. Brighter Future.",
   description:
     "A visionary leader dedicated to the people, progress and prosperity of our state. Join the movement for a stronger and better tomorrow.",
   keywords: [
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     "Vision",
   ],
   openGraph: {
-    title: "My CM My Pride | Strong Leadership. Brighter Future.",
+    title: "OUR CM OUR PRIDE | Strong Leadership. Brighter Future.",
     description:
       "A visionary leader dedicated to the people, progress and prosperity of our state.",
     type: "website",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "My CM My Pride",
+    title: "OUR CM OUR PRIDE",
     description: "Strong Leadership. Brighter Future.",
   },
   robots: {

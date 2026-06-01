@@ -1,4 +1,4 @@
-# My CM My Pride — Political Campaign Website
+# OUR CM OUR PRIDE — Political Campaign Website
 
 > Phase 1: Landing Page (Complete)
 

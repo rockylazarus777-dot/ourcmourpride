@@ -109,7 +109,7 @@ export default function CTASection() {
                   Together, let&apos;s build a state we are proud of.
                 </p>
                 <p className="text-white font-poppins font-bold text-base md:text-lg mt-2">
-                  Together, My CM, My Pride!
+                  Together, OUR CM, OUR PRIDE!
                 </p>
                 {/* Signature */}
                 <div className="mt-4">

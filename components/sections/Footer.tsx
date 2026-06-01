@@ -4,7 +4,7 @@ import { Facebook, Twitter, Instagram, Youtube, Heart } from "lucide-react";
 const quickLinks = [
   { label: "About CM", href: "/about" },
   { label: "Vision & Mission", href: "/vision" },
-  { label: "Initiatives", href: "/initiatives" },
+  { label: "Events", href: "/events" },
   { label: "Gallery", href: "/gallery" },
   { label: "News & Updates", href: "/news" },
   { label: "Contact Us", href: "/contact" },
@@ -21,7 +21,7 @@ const importantLinks = [
 const getInvolvedLinks = [
   { label: "Volunteer", href: "/join" },
   { label: "Share Your Ideas", href: "/contact" },
-  { label: "Events", href: "#" },
+  { label: "Events", href: "/events" },
   { label: "Support the Cause", href: "/join" },
 ];
 
@@ -51,8 +51,8 @@ export default function Footer() {
                 </svg>
               </div>
               <div>
-                <p className="font-poppins font-black text-base text-white leading-tight">MY CM</p>
-                <p className="font-poppins font-black text-base text-primary leading-tight">MY PRIDE</p>
+                <p className="font-poppins font-black text-base text-white leading-tight">OUR CM</p>
+                <p className="font-poppins font-black text-base text-primary leading-tight">OUR PRIDE</p>
               </div>
             </Link>
 
@@ -155,7 +155,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container-max py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-white/50 text-xs font-inter">
-            © 2024 My CM My Pride. All Rights Reserved.
+            © 2024 OUR CM OUR PRIDE. All Rights Reserved.
           </p>
           <p className="text-white/50 text-xs font-inter flex items-center gap-1">
             Designed with{" "}

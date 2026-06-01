@@ -10,7 +10,7 @@ export default function HeroImage({ src = "/images/cm4.png", alt = "CM" }: { src
         {/* Flag overlay behind shoulder (lower z-index than image) */}
         <div className="hidden md:block absolute bottom-[28%] right-[18%] z-10 transform translate-x-6">
           <div className="w-36 h-20 bg-white/90 rounded-r-md flex items-center justify-center shadow-sm opacity-95">
-            <div className="text-xs font-poppins font-bold text-navy text-center">MY CM<br/>MY PRIDE</div>
+            <div className="text-xs font-poppins font-bold text-navy text-center">OUR CM<br/>OUR PRIDE</div>
           </div>
         </div>
 
