@@ -1,6 +1,8 @@
 import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/sections/Hero";
 import StatsBar from "@/components/sections/StatsBar";
+import AboutSection from "@/components/sections/AboutSection";
+import MissionSection from "@/components/sections/MissionSection";
 import VisionSection from "@/components/sections/VisionSection";
 import InitiativesSection from "@/components/sections/InitiativesSection";
 import CTASection from "@/components/sections/CTASection";
@@ -17,6 +19,12 @@ export default function HomePage() {
 
       {/* Floating Stats Bar — overlaps hero bottom */}
       <StatsBar />
+
+      {/* About Us */}
+      <AboutSection />
+
+      {/* Our Mission */}
+      <MissionSection />
 
       {/* Vision Section */}
       <VisionSection />

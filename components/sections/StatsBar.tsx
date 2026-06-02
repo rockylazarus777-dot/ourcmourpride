@@ -97,7 +97,7 @@ export default function StatsBar() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
 
   return (
-    <section ref={ref} className="relative z-10 -mt-8 px-4">
+    <section ref={ref} className="relative z-20 -mt-14 md:-mt-20 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

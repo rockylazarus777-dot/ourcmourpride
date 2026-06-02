@@ -10,18 +10,24 @@ const stats = [
 
 export default function StatsBar() {
   return (
-    <div className="absolute left-1/2 -translate-x-1/2 bottom-6 z-40 w-[min(1100px,92%)]">
-      <div className="bg-navy/90 backdrop-blur-sm text-white rounded-2xl shadow-2xl px-4 py-3 flex items-center justify-between gap-4">
+    /* Sits just outside the hero bottom — floats without covering any hero content */
+    <div className="relative z-20 w-full -mt-14 md:-mt-20 px-4 sm:px-6 flex justify-center">
+      <div className="w-full max-w-5xl bg-navy/90 backdrop-blur-sm text-white rounded-2xl shadow-2xl px-4 py-3 grid grid-cols-2 lg:grid-cols-4 gap-0">
         {stats.map((s, idx) => {
           const Icon = s.icon;
           return (
-            <div key={idx} className="flex items-center gap-4 px-3 py-2 min-w-[170px]">
-              <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shadow-md">
+            <div
+              key={idx}
+              className={`flex items-center gap-3 px-4 py-4 ${
+                idx < stats.length - 1 ? "border-b lg:border-b-0 lg:border-r border-white/10" : ""
+              } ${idx % 2 === 0 && idx < stats.length - 1 ? "border-r lg:border-r-0" : ""}`}
+            >
+              <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center shadow-md flex-shrink-0">
                 <Icon size={20} />
               </div>
-              <div className="text-left">
-                <div className="text-sm font-bold">{s.label.split(':')[0]}</div>
-                <div className="text-xs opacity-80">{s.label.includes(":") ? s.label.split(":")[1].trim() : ''}</div>
+              <div className="text-left min-w-0">
+                <div className="text-sm font-bold leading-tight truncate">{s.label.split(':')[0]}</div>
+                <div className="text-xs opacity-70 leading-tight">{s.label.includes(":") ? s.label.split(":")[1].trim() : ''}</div>
               </div>
             </div>
           );
