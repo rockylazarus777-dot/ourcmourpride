@@ -33,6 +33,7 @@ const config: Config = {
         background: "#F8F8F8",
       },
       fontFamily: {
+        raleway: ["var(--font-raleway)", "sans-serif"],
         poppins: ["var(--font-poppins)", "sans-serif"],
         inter: ["var(--font-inter)", "sans-serif"],
       },

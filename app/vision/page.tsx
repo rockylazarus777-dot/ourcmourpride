@@ -1,17 +1,34 @@
 import type { Metadata } from "next";
-import ComingSoonPage from "@/components/common/ComingSoonPage";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/sections/Footer";
+import VisionHeroSlider from "@/components/hero/VisionHeroSlider";
+import VisionIntro from "@/components/sections/VisionIntro";
+import VisionPillars from "@/components/sections/VisionPillars";
+import VisionRoadmap from "@/components/sections/VisionRoadmap";
+import StrategicPriorities from "@/components/sections/StrategicPriorities";
+import VisionQuote from "@/components/sections/VisionQuote";
 
 export const metadata: Metadata = {
   title: "Vision | Our CM Our Pride",
   description:
-    "Our vision section is currently under development and will be published shortly.",
+    "Our vision for Tamil Nadu: Building a future rooted in clean, green, healthy, wealthy, and safe communities through collective effort and shared responsibility.",
 };
 
 export default function VisionPage() {
   return (
-    <ComingSoonPage
-      title="Vision"
-      description="Our vision section is currently under development and will be published shortly."
-    />
+    <>
+      <Navbar />
+      <VisionHeroSlider />
+
+      <main className="flex-1 bg-white">
+        <VisionIntro />
+        <VisionPillars />
+        <VisionRoadmap />
+        <StrategicPriorities />
+        <VisionQuote />
+      </main>
+
+      <Footer />
+    </>
   );
 }

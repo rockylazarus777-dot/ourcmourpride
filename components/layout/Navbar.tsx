@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Menu, X, Facebook, Twitter, Instagram, Youtube, Users } from "lucide-react";
+import { Menu, X, Facebook, Instagram, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -13,15 +13,12 @@ const navLinks = [
   { label: "VISION", href: "/vision" },
   { label: "EVENTS", href: "/events" },
   { label: "GALLERY", href: "/gallery" },
-  { label: "NEWS", href: "/news" },
   { label: "CONTACT", href: "/contact" },
 ];
 
 const socialLinks = [
   { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Twitter, href: "#", label: "Twitter" },
   { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Youtube, href: "#", label: "YouTube" },
 ];
 
 export default function Navbar() {

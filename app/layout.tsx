@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
-import { Poppins, Inter } from "next/font/google";
+import { Poppins, Inter, Raleway } from "next/font/google";
 import "./globals.css";
+
+const raleway = Raleway({
+  subsets: ["latin"],
+  weight: ["700", "800", "900"],
+  variable: "--font-raleway",
+  display: "swap",
+});
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -61,7 +68,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${poppins.variable} ${inter.variable}`}>
+    <html lang="en" className={`${raleway.variable} ${poppins.variable} ${inter.variable}`}>
       <body className="font-inter antialiased bg-white text-navy">
         {children}
       </body>
