@@ -1,16 +1,12 @@
-import type { Metadata } from "next";
-import ComingSoonPage from "@/components/common/ComingSoonPage";
+import { Metadata } from "next";
+import GalleryPageClient from "@/components/gallery/GalleryPageClient";
 
 export const metadata: Metadata = {
   title: "Gallery | Our CM Our Pride",
-  description: "Photo and media galleries will be available soon.",
+  description:
+    "A premium event gallery showcasing citizen-first initiatives and community moments.",
 };
 
 export default function GalleryPage() {
-  return (
-    <ComingSoonPage
-      title="Gallery"
-      description="Photo and media galleries will be available soon."
-    />
-  );
+  return <GalleryPageClient />;
 }

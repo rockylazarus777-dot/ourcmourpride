@@ -19,10 +19,10 @@ export default function AboutCM() {
           >
               <div className="relative flex-1 min-h-0 overflow-hidden">
               <Image
-                src="/images/cm4.png"
+                src="/images/cm5.png"
                 alt="Chief Minister C. Joseph Vijay portrait"
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-cover object-[center_25%] transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 420px"
               />
             </div>
