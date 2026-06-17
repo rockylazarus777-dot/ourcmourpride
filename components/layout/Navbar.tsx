@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Menu, X, Facebook, Twitter, Instagram, Youtube, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -47,6 +48,21 @@ export default function Navbar() {
       document.body.style.overflow = "";
     };
   }, [isMobileOpen]);
+
+  // keep active link in sync with current route
+  const pathname = usePathname();
+  useEffect(() => {
+    if (!pathname) return;
+
+    if (pathname === "/") {
+      setActiveLink("/");
+      return;
+    }
+
+    const match = navLinks.find((l) => l.href !== "/" && pathname.startsWith(l.href));
+    if (match) setActiveLink(match.href);
+    else setActiveLink("");
+  }, [pathname]);
 
   return (
     <>

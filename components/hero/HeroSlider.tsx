@@ -3,52 +3,80 @@
 import React from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, EffectFade } from "swiper/modules";
+import { Autoplay, Pagination, EffectFade, Navigation } from "swiper/modules";
+
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
+import "swiper/css/navigation";
 
-// Minimal Smart Slider-like hero using banner images that already contain text/composition.
-const slides = [
-  { id: 1, imageSrc: "/images/cm1.png", alt: "My CM - My Pride campaign banner 1" },
-  { id: 2, imageSrc: "/images/cm4.png", alt: "My CM - My Pride campaign banner 2" },
-  { id: 3, imageSrc: "/images/cm3.png", alt: "My CM - My Pride campaign banner 3" },
+export interface HeroSlide {
+  id: number;
+  imageSrc: string;
+  alt: string;
+}
+
+const defaultSlides: HeroSlide[] = [
+  {
+    id: 1,
+    imageSrc: "/images/cm1.png",
+    alt: "My CM My Pride Banner 1",
+  },
 ];
 
-export default function HeroSlider() {
-  return (
-    <section className="relative w-full overflow-x-hidden bg-slate-50 pt-16 md:pt-20 pb-14 md:pb-20">
-      <div className="w-full max-w-full mx-auto h-full overflow-hidden">
-        <Swiper
-          modules={[Autoplay, Pagination, EffectFade]}
-          slidesPerView={1}
-          loop={true}
-          pagination={{ clickable: true }}
-          autoplay={{ delay: 4500, disableOnInteraction: false }}
-          effect="fade"
-          className="w-full h-[55vh] md:h-[72vh] lg:h-[70vh]"
-          wrapperClass="h-full"
-        >
-          {slides.map((s) => (
-            <SwiperSlide key={s.id} className="relative w-full h-full">
-              {/* banner image fills the slide; composition must come from image */}
-              <div className="absolute inset-0 w-full h-full bg-slate-100">
-                <Image
-                  src={s.imageSrc}
-                  alt={s.alt}
-                  fill
-                  sizes="100vw"
-                  style={{ objectFit: 'cover', objectPosition: 'top center' }}
-                  className="md:object-cover"
-                  priority
-                />
-              </div>
+interface HeroSliderProps {
+  variant?: "default" | "minimal" | "fullscreen";
+  slides?: HeroSlide[];
+  showNavigation?: boolean;
+}
 
-              {/* Swiper navigation elements are injected by Swiper; ensure z-index so they stay visible */}
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
+export default function HeroSlider({
+  variant = "default",
+  slides = defaultSlides,
+  showNavigation = true,
+}: HeroSliderProps) {
+  const sectionClasses =
+    variant === "minimal"
+      ? "relative w-full overflow-x-hidden"
+      : variant === "fullscreen"
+      ? "relative w-full overflow-hidden"
+      : "relative w-full overflow-x-hidden bg-slate-50 pb-14 md:pb-20";
+
+  const sliderHeightClass =
+    variant === "fullscreen"
+      ? "h-[calc(100vh-80px)]"
+      : "h-[55vh] md:h-[72vh] lg:h-[70vh]";
+
+  return (
+    <section className={sectionClasses}>
+      <Swiper
+        modules={[Autoplay, Pagination, EffectFade, Navigation]}
+        slidesPerView={1}
+        loop
+        effect="fade"
+        navigation={showNavigation}
+        pagination={{ clickable: true }}
+        autoplay={{
+          delay: 4500,
+          disableOnInteraction: false,
+        }}
+        className={`w-full ${sliderHeightClass}`}
+      >
+        {slides.map((slide) => (
+          <SwiperSlide key={slide.id}>
+            <div className="relative w-full h-full">
+              <Image
+                src={slide.imageSrc}
+                alt={slide.alt}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover object-[center_28%]"
+              />
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </section>
   );
 }
