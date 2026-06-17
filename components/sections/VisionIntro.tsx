@@ -24,7 +24,7 @@ export default function VisionIntro() {
           >
             <div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-xl">
               <Image
-                src="/images/vision-intro.jpg"
+                src="/images/vision-intro.png"
                 alt="Our Vision for Tamil Nadu"
                 fill
                 className="object-cover object-[center_80%]"
