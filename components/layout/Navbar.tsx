@@ -17,8 +17,8 @@ const navLinks = [
 ];
 
 const socialLinks = [
-  { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Instagram, href: "#", label: "Instagram" },
+  { icon: Facebook, href: "https://www.facebook.com/profile.php?id=100070522891863&sk=directory_links", label: "Facebook" },
+  { icon: Instagram, href: "https://www.instagram.com/ourcmourpride_off?igsh=MWQ0b3kzOWpvYWNpYg==", label: "Instagram" },
 ];
 
 export default function Navbar() {
@@ -147,6 +147,8 @@ export default function Navbar() {
                   <a
                     key={label}
                     href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     aria-label={label}
                     className="w-8 h-8 flex items-center justify-center rounded-full text-navy hover:text-primary hover:bg-orange-50 transition-all duration-200"
                   >

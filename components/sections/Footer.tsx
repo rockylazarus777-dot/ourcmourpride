@@ -26,9 +26,9 @@ const getInvolvedLinks = [
 ];
 
 const socialLinks = [
-  { icon: Facebook, href: "#", label: "Facebook" },
+  { icon: Facebook, href: "https://www.facebook.com/profile.php?id=100070522891863&sk=directory_links", label: "Facebook" },
   { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Instagram, href: "#", label: "Instagram" },
+  { icon: Instagram, href: "https://www.instagram.com/ourcmourpride_off?igsh=MWQ0b3kzOWpvYWNpYg==", label: "Instagram" },
   { icon: Youtube, href: "#", label: "YouTube" },
 ];
 
@@ -72,6 +72,8 @@ export default function Footer() {
                 <a
                   key={label}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   className="w-9 h-9 rounded-full border border-white/20 hover:border-primary hover:bg-primary flex items-center justify-center text-white/70 hover:text-white transition-all duration-200"
                 >
