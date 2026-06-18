@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Youtube, Heart } from "lucide-react";
 
+const legalLinks = [
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms & Conditions", href: "/terms-and-conditions" },
+  { label: "Cookie Policy", href: "/cookie-policy" },
+  { label: "Disclaimer", href: "/disclaimer" },
+];
+
 const quickLinks = [
   { label: "About CM", href: "/about" },
   { label: "Vision & Mission", href: "/vision" },
@@ -149,6 +156,29 @@ export default function Footer() {
                 Follow us on social media for the latest updates.
               </p>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Legal Links */}
+      <div className="border-t border-white/10">
+        <div className="container-max py-4">
+          <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-0">
+            {legalLinks.map((link, i) => (
+              <span key={link.href} className="flex items-center">
+                <Link
+                  href={link.href}
+                  className="px-3 py-1 text-xs font-inter text-white/40 transition-colors duration-200 hover:text-primary"
+                >
+                  {link.label}
+                </Link>
+                {i < legalLinks.length - 1 && (
+                  <span className="hidden sm:inline text-white/15 text-xs select-none" aria-hidden="true">
+                    |
+                  </span>
+                )}
+              </span>
+            ))}
           </div>
         </div>
       </div>
