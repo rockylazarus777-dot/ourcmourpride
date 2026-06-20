@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Facebook, Twitter, Instagram, Youtube, Heart } from "lucide-react";
 
 const legalLinks = [
@@ -48,19 +49,14 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2 space-y-5">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-orange">
-                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-7 h-7">
-                  <path d="M20 4C20 4 14 10 14 18C14 22.4 16.8 26 20 26C23.2 26 26 22.4 26 18C26 10 20 4 20 4Z" fill="white"/>
-                  <path d="M20 18C20 18 16 21 16 25C16 27.2 17.8 29 20 29C22.2 29 24 27.2 24 25C24 21 20 18 20 18Z" fill="white" opacity="0.7"/>
-                  <path d="M12 32L20 28L28 32" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                  <path d="M8 36L20 30L32 36" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <div>
-                <p className="font-poppins font-black text-base text-white leading-tight">OUR CM</p>
-                <p className="font-poppins font-black text-base text-primary leading-tight">OUR PRIDE</p>
-              </div>
+            <Link href="/">
+              <Image
+                src="/images/logo.png"
+                alt="Our CM Our Pride"
+                width={180}
+                height={52}
+                className="h-12 w-auto object-contain"
+              />
             </Link>
 
             {/* Tagline */}

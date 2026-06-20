@@ -100,3 +100,23 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #F97316;
   width: 24px;
 }
+
+/* Events hero slider — custom pagination */
+.events-hero-slider .swiper-pagination {
+  bottom: 28px;
+}
+
+.events-hero-slider .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.45);
+  opacity: 1;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.events-hero-slider .swiper-pagination-bullet-active {
+  background: #F97316;
+  width: 28px;
+  border-radius: 2px;
+}

@@ -37,17 +37,37 @@ export const metadata: Metadata = {
     "Welfare",
     "Vision",
   ],
+  icons: {
+    icon: [
+      { url: "/images/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/images/icon-256x256.png", sizes: "256x256", type: "image/png" },
+      { url: "/images/icon-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/images/icon-180x180.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: "/images/icon-192x192.png",
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/images/icon-512x512.png",
+      },
+    ],
+  },
+  manifest: "/manifest.webmanifest",
   openGraph: {
     title: "OUR CM OUR PRIDE | Strong Leadership. Brighter Future.",
     description:
       "A visionary leader dedicated to the people, progress and prosperity of our state.",
     type: "website",
     locale: "en_IN",
+    images: [{ url: "/images/icon-1024x1024.png" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "OUR CM OUR PRIDE",
     description: "Strong Leadership. Brighter Future.",
+    images: ["/images/icon-1024x1024.png"],
   },
   robots: {
     index: true,

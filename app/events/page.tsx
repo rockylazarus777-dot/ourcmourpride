@@ -2,9 +2,24 @@ import { Metadata } from "next";
 import EventsPageClient from "./EventsPageClient";
 
 export const metadata: Metadata = {
-  title: "Events | OUR CM OUR PRIDE",
+  title: "Events & Public Welfare Initiatives | OUR CM OUR PRIDE",
   description:
-    "Join the Mega Pink Marathon — a powerful people's movement dedicated to creating a Breast Cancer Free Tamil Nadu by 2030.",
+    "Explore community welfare, healthcare, education, environment, and social development initiatives by Our CM Our Pride across Tamil Nadu.",
+  keywords: [
+    "Tamil Nadu welfare programs",
+    "community initiatives",
+    "public welfare",
+    "healthcare camps",
+    "education programs",
+    "social development",
+    "Our CM Our Pride events",
+  ],
+  openGraph: {
+    title: "Events & Public Welfare Initiatives | OUR CM OUR PRIDE",
+    description:
+      "52+ community initiatives covering healthcare, education, women empowerment, environment, and more across Tamil Nadu.",
+    type: "website",
+  },
 };
 
 export default function EventsPage() {

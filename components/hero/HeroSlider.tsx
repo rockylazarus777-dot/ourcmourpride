@@ -71,7 +71,7 @@ export default function HeroSlider({
                 fill
                 priority
                 sizes="100vw"
-                className="object-cover object-[center_28%]"
+                className="object-cover object-[center_54%]"
               />
             </div>
           </SwiperSlide>

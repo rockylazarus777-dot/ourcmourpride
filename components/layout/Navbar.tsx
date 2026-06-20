@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, Facebook, Instagram, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -74,43 +75,15 @@ export default function Navbar() {
         <div className="container-max">
           <nav className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
-              <div className="w-10 h-10 md:w-12 md:h-12 relative">
-                <div className="w-full h-full rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-orange">
-                  {/* Flame / Star icon */}
-                  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
-                    <path
-                      d="M20 4C20 4 14 10 14 18C14 22.4 16.8 26 20 26C23.2 26 26 22.4 26 18C26 10 20 4 20 4Z"
-                      fill="white"
-                    />
-                    <path
-                      d="M20 18C20 18 16 21 16 25C16 27.2 17.8 29 20 29C22.2 29 24 27.2 24 25C24 21 20 18 20 18Z"
-                      fill="white"
-                      opacity="0.7"
-                    />
-                    <path
-                      d="M12 32L20 28L28 32"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M8 36L20 30L32 36"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div className="leading-tight">
-                <p className="font-poppins font-bold text-sm md:text-base text-navy leading-none">
-                  OUR CM
-                </p>
-                <p className="font-poppins font-bold text-sm md:text-base text-primary leading-none">
-                  OUR PRIDE
-                </p>
-              </div>
+            <Link href="/" className="flex items-center flex-shrink-0">
+              <Image
+                src="/images/logo.png"
+                alt="Our CM Our Pride"
+                width={160}
+                height={48}
+                priority
+                className="h-10 md:h-12 w-auto object-contain"
+              />
             </Link>
 
             {/* Desktop Nav Links */}
@@ -202,15 +175,13 @@ export default function Navbar() {
             >
               {/* Drawer Header */}
               <div className="flex items-center justify-between p-5 border-b border-gray-100">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
-                    <span className="text-white font-bold text-xs">MC</span>
-                  </div>
-                  <div>
-                    <p className="font-poppins font-bold text-sm text-navy leading-none">OUR CM</p>
-                    <p className="font-poppins font-bold text-sm text-primary leading-none">OUR PRIDE</p>
-                  </div>
-                </div>
+                <Image
+                  src="/images/logo.png"
+                  alt="Our CM Our Pride"
+                  width={140}
+                  height={40}
+                  className="h-9 w-auto object-contain"
+                />
                 <button
                   onClick={() => setIsMobileOpen(false)}
                   className="w-9 h-9 flex items-center justify-center rounded-md hover:bg-gray-100 transition-colors text-navy"
