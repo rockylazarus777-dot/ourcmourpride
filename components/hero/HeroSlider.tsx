@@ -3,12 +3,11 @@
 import React from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, EffectFade, Navigation } from "swiper/modules";
+import { Autoplay, Pagination, EffectFade } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-import "swiper/css/navigation";
 
 export interface HeroSlide {
   id: number;
@@ -32,13 +31,11 @@ const defaultSlides: HeroSlide[] = [
 interface HeroSliderProps {
   variant?: "default" | "minimal" | "fullscreen";
   slides?: HeroSlide[];
-  showNavigation?: boolean;
 }
 
 export default function HeroSlider({
   variant = "default",
   slides = defaultSlides,
-  showNavigation = true,
 }: HeroSliderProps) {
   const sectionClasses =
     variant === "minimal"
@@ -55,11 +52,10 @@ export default function HeroSlider({
   return (
     <section className={sectionClasses}>
       <Swiper
-        modules={[Autoplay, Pagination, EffectFade, Navigation]}
+        modules={[Autoplay, Pagination, EffectFade]}
         slidesPerView={1}
         loop
         effect="fade"
-        navigation={showNavigation}
         pagination={{ clickable: true }}
         autoplay={{
           delay: 4500,
