@@ -22,6 +22,11 @@ const defaultSlides: HeroSlide[] = [
     imageSrc: "/images/cm1.png",
     alt: "My CM My Pride Banner 1",
   },
+  {
+    id: 2,
+    imageSrc: "/images/our_cm_1600x650.png",
+    alt: "My CM My Pride Banner 2",
+  }
 ];
 
 interface HeroSliderProps {

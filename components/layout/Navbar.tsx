@@ -12,6 +12,7 @@ const navLinks = [
   { label: "HOME", href: "/" },
   { label: "ABOUT CM", href: "/about" },
   { label: "VISION", href: "/vision" },
+  { label: "TEAM", href: "/team" },
   { label: "EVENTS", href: "/events" },
   { label: "GALLERY", href: "/gallery" },
   { label: "CONTACT", href: "/contact" },
