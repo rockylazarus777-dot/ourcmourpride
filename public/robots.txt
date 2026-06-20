@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Allow favicon and icon assets explicitly
+Allow: /favicon.ico
+Allow: /icon.png
+Allow: /apple-icon.png
+Allow: /icon-192x192.png
+Allow: /icon-512x512.png
+Allow: /manifest.webmanifest
+
+Sitemap: https://www.ourcmourpride.com/sitemap.xml
