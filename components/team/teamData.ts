@@ -18,7 +18,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 2,
-    name: "Member Name",
+    name: "Dr Michael Irudhayaraj",
     designation: "General Secretary",
     image: "/images/team/member-2.png",
     description:
@@ -26,7 +26,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 3,
-    name: "Member Name",
+    name: " Mr. Adv Densing",
     designation: "District Coordinator",
     image: "/images/team/member-3.png",
     description:
@@ -34,7 +34,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 4,
-    name: "Member Name",
+    name: "Ms. Rtn Dr Krithika",
     designation: "Youth Wing Leader",
     image: "/images/team/member-4.png",
     description:
@@ -42,7 +42,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 5,
-    name: "Member Name",
+    name: "Dr J Packiaselvi",
     designation: "Women's Welfare Head",
     image: "/images/team/member-5.png",
     description:
@@ -50,7 +50,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     id: 6,
-    name: "Member Name",
+    name: "Mr. Anesh Sundaran",
     designation: "Public Relations Officer",
     image: "/images/team/member-6.png",
     description:
