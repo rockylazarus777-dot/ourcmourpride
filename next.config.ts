@@ -6,6 +6,15 @@ const isVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
 const nextConfig: NextConfig = {
   /* Silence the multiple-lockfile workspace-root warning — only locally */
   ...(isVercel ? {} : { outputFileTracingRoot: path.join(process.cwd(), "..") }),
+  /* Never let large public assets (gallery photos, images) get swept into
+   * serverless function bundles — they are static files served by the CDN,
+   * not something any server function should read at runtime. */
+  outputFileTracingExcludes: {
+    "/**": ["public/gallery/**", "public/images/**"],
+  },
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
   images: {
     remotePatterns: [
       {

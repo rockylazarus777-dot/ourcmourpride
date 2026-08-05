@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "build": {
+    "env": {
+      "VERCEL_ANALYZE_BUILD_OUTPUT": "1"
+    }
+  }
+}
