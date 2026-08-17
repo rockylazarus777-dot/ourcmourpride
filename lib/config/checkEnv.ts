@@ -52,5 +52,15 @@ export function checkRequiredEnv(): EnvCheckGroup[] {
         ADMIN_SESSION_SECRET: status(process.env.ADMIN_SESSION_SECRET),
       },
     },
+    {
+      // Optional — only needed for the participant photo upload feature.
+      group: "Google Drive (participant photos)",
+      vars: {
+        GOOGLE_OAUTH_CLIENT_ID: status(process.env.GOOGLE_OAUTH_CLIENT_ID),
+        GOOGLE_OAUTH_CLIENT_SECRET: status(process.env.GOOGLE_OAUTH_CLIENT_SECRET),
+        GOOGLE_OAUTH_REFRESH_TOKEN: status(process.env.GOOGLE_OAUTH_REFRESH_TOKEN),
+        GOOGLE_DRIVE_PHOTOS_FOLDER_ID: status(process.env.GOOGLE_DRIVE_PHOTOS_FOLDER_ID),
+      },
+    },
   ];
 }

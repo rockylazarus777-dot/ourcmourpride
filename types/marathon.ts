@@ -57,6 +57,8 @@ export interface MarathonDraftState {
   emergencyContactName: string;
   emergencyContactPhone: string;
   draftId: number | null;
+  photoDriveFileId: string | null;
+  photoDriveUrl: string | null;
   razorpayOrderId: string | null;
   registrationId: string | null;
   certificateId: string | null;
@@ -80,6 +82,8 @@ export const INITIAL_MARATHON_DRAFT: MarathonDraftState = {
   emergencyContactName: "",
   emergencyContactPhone: "",
   draftId: null,
+  photoDriveFileId: null,
+  photoDriveUrl: null,
   razorpayOrderId: null,
   registrationId: null,
   certificateId: null,
@@ -133,6 +137,12 @@ export interface RegisterRequest {
 export interface RegisterResponse {
   draftId: number;
   amount: number;
+}
+
+/** multipart/form-data: { draftId: string, photo: File } */
+export interface PhotoUploadResponse {
+  photoDriveFileId: string;
+  photoDriveUrl: string;
 }
 
 export interface CreateOrderRequest {

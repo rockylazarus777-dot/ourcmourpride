@@ -274,3 +274,60 @@ Public flow: `/events/marathon/register` → `pledge` → `verify-email` → `de
 `success` → `pass/[registrationId]` or `certificate/[certificateId]`. Certificate authenticity:
 `/verify/[certificateId]`. Admin: `/admin/login`, `/admin` (dashboard), `/admin/checkin` (QR
 scanner).
+
+### 10e. Optional participant photo (Google Drive)
+
+On the Details step, a participant may optionally attach a passport-size photo. It is uploaded
+server-side to Google Drive — never stored in Supabase — and only the resulting Drive file id /
+link is saved on the `registrations` row (`photo_drive_file_id`, `photo_drive_url`).
+
+**Why OAuth2, not a service account:** a plain Google service account has 0 bytes of Drive
+storage quota and cannot own files in a personal ("My Drive") folder — only in a Google Workspace
+Shared Drive. Since this uploads into a normal Google account's Drive, it authenticates as that
+account via an OAuth2 refresh token instead.
+
+**One-time setup:**
+
+1. In [Google Cloud Console](https://console.cloud.google.com/), create (or reuse) a project and
+   enable the **Google Drive API** (APIs & Services → Library).
+2. Configure the **OAuth consent screen** (External is fine; Testing mode works — add your own
+   Google account under "Test users").
+3. Create an **OAuth client ID** of type **Desktop app** (APIs & Services → Credentials). Copy the
+   Client ID and Client Secret.
+4. Run, locally (never on a server):
+   ```
+   node scripts/get-google-refresh-token.mjs <CLIENT_ID> <CLIENT_SECRET>
+   ```
+   Sign in with the Google account that should receive the photos when prompted. The script
+   prints the values to paste into `.env.local`:
+   ```
+   GOOGLE_OAUTH_CLIENT_ID=...
+   GOOGLE_OAUTH_CLIENT_SECRET=...
+   GOOGLE_OAUTH_REFRESH_TOKEN=...
+   ```
+5. With those three values now in `.env.local`, run:
+   ```
+   node scripts/create-drive-folder.mjs
+   ```
+   This creates `OUR CM OUR PRIDE → Marathon 2026 → Participant Photos` **via the API itself** and
+   prints the innermost folder's id — paste it into `.env.local` as `GOOGLE_DRIVE_PHOTOS_FOLDER_ID`.
+
+   **Do not create this folder by hand in the Drive web UI and paste its id instead.** The consent
+   scope requested is `drive.file` — least privilege, the app can only see files/folders it
+   creates itself (or that are explicitly opened via a Picker). A manually-created folder is
+   invisible to a `drive.file`-scoped token for read/list operations (`files.get` 404s on it),
+   even though it belongs to the same account. `create-drive-folder.mjs` sidesteps this by having
+   the app create — and therefore own visibility into — the folder from the start. It's idempotent,
+   so re-running it reuses the same three folders instead of duplicating them.
+
+Without these four variables configured, photo upload requests fail with a clear error but the
+rest of the registration flow (including payment) is entirely unaffected — the photo is optional
+end-to-end.
+
+### 10f. New migration for the photo feature
+
+```
+supabase/migrations/20260817000000_marathon2026_photo.sql
+```
+
+Adds the nullable `photo_drive_file_id` / `photo_drive_url` columns to `registrations`.

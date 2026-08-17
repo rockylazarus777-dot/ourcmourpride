@@ -7,7 +7,6 @@ import {
   Users,
   Medal,
   Laptop,
-  IndianRupee,
   ScanLine,
   Download,
   FileSpreadsheet,
@@ -23,7 +22,6 @@ interface Stats {
   physicalCount: number;
   eParticipantCount: number;
   checkedInCount: number;
-  revenue: number;
 }
 
 function StatCard({
@@ -125,7 +123,7 @@ export default function AdminDashboardView() {
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="font-poppins font-black text-2xl text-navy">Mega Marathon 2026 — Admin</h1>
-          <p className="font-inter text-sm text-navy/55">Registrations, revenue, and check-in overview</p>
+          <p className="font-inter text-sm text-navy/55">Registrations and check-in overview</p>
         </div>
         <div className="flex items-center gap-2">
           <Link
@@ -147,16 +145,11 @@ export default function AdminDashboardView() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard icon={Users} label="Total Registrations" value={stats?.totalRegistrations ?? "—"} />
         <StatCard icon={Medal} label="Physical Participants" value={stats?.physicalCount ?? "—"} />
         <StatCard icon={Laptop} label="E-Participants" value={stats?.eParticipantCount ?? "—"} />
         <StatCard icon={ScanLine} label="Checked In" value={stats?.checkedInCount ?? "—"} />
-        <StatCard
-          icon={IndianRupee}
-          label="Revenue"
-          value={stats ? `₹${stats.revenue.toLocaleString("en-IN")}` : "—"}
-        />
       </div>
 
       {/* Filters + export */}
@@ -248,6 +241,7 @@ export default function AdminDashboardView() {
                 <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Type</th>
                 <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Category</th>
                 <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Payment</th>
+                <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Photo</th>
                 <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Check-in</th>
                 <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Actions</th>
               </tr>
@@ -255,13 +249,13 @@ export default function AdminDashboardView() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-navy/40 font-inter">
+                  <td colSpan={8} className="px-4 py-8 text-center text-navy/40 font-inter">
                     Loading…
                   </td>
                 </tr>
               ) : registrations.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-navy/40 font-inter">
+                  <td colSpan={8} className="px-4 py-8 text-center text-navy/40 font-inter">
                     No registrations found.
                   </td>
                 </tr>
@@ -291,6 +285,20 @@ export default function AdminDashboardView() {
                       >
                         {r.payment_status}
                       </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {r.photo_drive_url ? (
+                        <a
+                          href={r.photo_drive_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-poppins font-semibold text-primary hover:underline"
+                        >
+                          View Photo
+                        </a>
+                      ) : (
+                        <span className="text-navy/30">—</span>
+                      )}
                     </td>
                     <td className="px-4 py-3 font-inter text-navy/70 whitespace-nowrap">
                       {r.check_in_status ? "✅ Checked in" : "—"}

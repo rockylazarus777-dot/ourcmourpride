@@ -88,6 +88,8 @@ export interface Database {
           emergency_contact_phone: string;
           pledge_accepted: boolean;
           otp_verified: boolean;
+          photo_drive_file_id: string | null;
+          photo_drive_url: string | null;
           payment_amount: number;
           payment_status: "pending" | "paid" | "failed";
           payment_id: string | null;
@@ -119,6 +121,8 @@ export interface Database {
           emergency_contact_phone: string;
           pledge_accepted?: boolean;
           otp_verified?: boolean;
+          photo_drive_file_id?: string | null;
+          photo_drive_url?: string | null;
           payment_amount: number;
           payment_status?: "pending" | "paid" | "failed";
           payment_id?: string | null;

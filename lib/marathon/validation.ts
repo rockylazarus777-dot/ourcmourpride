@@ -9,6 +9,25 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_RE = /^[6-9]\d{9}$/;
 const GENDERS = ["Male", "Female", "Other", "Prefer not to say"];
 
+export const MAX_PHOTO_SIZE_BYTES = 4 * 1024 * 1024; // 4MB — stays well under Vercel's ~4.5MB request body limit
+export const ALLOWED_PHOTO_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
+
+/**
+ * Validates a selected/uploaded photo file. Shared between the client
+ * (immediate feedback) and the server (the actual gate — never trust
+ * a client-only check). Accepts anything with `type`/`size`, so it
+ * works for both the browser's File and Next's server-side File.
+ */
+export function validatePhotoFile(file: { type: string; size: number }): string | null {
+  if (!ALLOWED_PHOTO_MIME_TYPES.includes(file.type as (typeof ALLOWED_PHOTO_MIME_TYPES)[number])) {
+    return "Only JPG, PNG or WebP images are allowed.";
+  }
+  if (file.size > MAX_PHOTO_SIZE_BYTES) {
+    return `Photo must be smaller than ${MAX_PHOTO_SIZE_BYTES / (1024 * 1024)}MB.`;
+  }
+  return null;
+}
+
 export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && EMAIL_RE.test(email.trim());
 }

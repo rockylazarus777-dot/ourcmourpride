@@ -21,17 +21,27 @@ const COLUMNS = [
   "payment_status",
   "payment_id",
   "certificate_id",
+  "photo_drive_url",
   "check_in_status",
   "check_in_time",
   "created_at",
 ] as const;
+
+/** Display label for a column's header cell — defaults to the raw column name. */
+const COLUMN_LABELS: Partial<Record<(typeof COLUMNS)[number], string>> = {
+  photo_drive_url: "Passport Photo URL",
+};
+
+function columnLabel(column: (typeof COLUMNS)[number]): string {
+  return COLUMN_LABELS[column] ?? column;
+}
 
 function toCsv(rows: Record<string, unknown>[]): string {
   const escape = (v: unknown) => {
     const s = v === null || v === undefined ? "" : String(v);
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
-  const header = COLUMNS.join(",");
+  const header = COLUMNS.map(columnLabel).join(",");
   const body = rows.map((r) => COLUMNS.map((c) => escape(r[c])).join(",")).join("\n");
   return `${header}\n${body}`;
 }
@@ -66,6 +76,7 @@ export async function GET(req: NextRequest) {
   }
 
   const worksheet = XLSX.utils.json_to_sheet(rows, { header: [...COLUMNS] });
+  XLSX.utils.sheet_add_aoa(worksheet, [COLUMNS.map(columnLabel)], { origin: "A1" });
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Registrations");
   const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });

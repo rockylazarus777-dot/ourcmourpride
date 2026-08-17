@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useMarathonRegistration } from "./MarathonRegistrationProvider";
 import StepProgress from "./StepProgress";
+import PhotoUpload from "./PhotoUpload";
 import { FieldLabel, FieldError, TextInput, PillGroup } from "./FormFields";
 import {
   BLOOD_GROUPS,
@@ -15,7 +16,12 @@ import {
   type MarathonCategory,
   type TshirtSize,
 } from "@/types/marathon";
-import type { RegisterRequest, RegisterResponse, ApiErrorResponse } from "@/types/marathon";
+import type {
+  RegisterRequest,
+  RegisterResponse,
+  PhotoUploadResponse,
+  ApiErrorResponse,
+} from "@/types/marathon";
 
 const GENDERS: Gender[] = ["Male", "Female", "Other", "Prefer not to say"];
 const CATEGORIES: MarathonCategory[] = ["student", "public", "government_employee"];
@@ -34,6 +40,12 @@ export default function DetailsView() {
   const [tshirtSize, setTshirtSize] = useState<TshirtSize | "">(draft.tshirtSize);
   const [emergencyContactName, setEmergencyContactName] = useState(draft.emergencyContactName);
   const [emergencyContactPhone, setEmergencyContactPhone] = useState(draft.emergencyContactPhone);
+
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoRejectionError, setPhotoRejectionError] = useState("");
+  const [photoUploadError, setPhotoUploadError] = useState("");
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const [pendingDraftId, setPendingDraftId] = useState<number | null>(null);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState("");
@@ -72,9 +84,36 @@ export default function DetailsView() {
     return Object.keys(e).length === 0;
   };
 
+  /** Uploads the selected photo to Drive and attaches it to `draftId`. Returns success. */
+  const uploadPhoto = async (draftId: number, file: File): Promise<boolean> => {
+    setPhotoUploading(true);
+    setPhotoUploadError("");
+    try {
+      const formData = new FormData();
+      formData.append("draftId", String(draftId));
+      formData.append("photo", file);
+
+      const res = await fetch("/api/marathon/photo/upload", { method: "POST", body: formData });
+      const data = (await res.json()) as PhotoUploadResponse | ApiErrorResponse;
+
+      if (!res.ok || !("photoDriveFileId" in data)) {
+        setPhotoUploadError("error" in data ? data.error : "Failed to upload photo. Please try again.");
+        return false;
+      }
+
+      updateDraft({ photoDriveFileId: data.photoDriveFileId, photoDriveUrl: data.photoDriveUrl });
+      return true;
+    } catch {
+      setPhotoUploadError("Network error while uploading photo. Please try again.");
+      return false;
+    } finally {
+      setPhotoUploading(false);
+    }
+  };
+
   const handleSubmit = async () => {
     setSubmitError("");
-    if (!validate()) return;
+    if (!validate() || photoRejectionError) return;
 
     updateDraft({
       fullName,
@@ -121,12 +160,35 @@ export default function DetailsView() {
       }
 
       updateDraft({ draftId: data.draftId });
+      setPendingDraftId(data.draftId);
+
+      // Registration row now exists as 'pending' (unpaid). If a photo was
+      // selected, upload it before moving on — on failure we stay here so
+      // no payment is ever attempted against an incomplete upload.
+      if (photoFile) {
+        const uploaded = await uploadPhoto(data.draftId, photoFile);
+        if (!uploaded) return;
+      }
+
       router.push("/events/marathon/payment");
     } catch {
       setSubmitError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRetryPhotoUpload = async () => {
+    if (!pendingDraftId || !photoFile) return;
+    const uploaded = await uploadPhoto(pendingDraftId, photoFile);
+    if (uploaded) router.push("/events/marathon/payment");
+  };
+
+  const handleSkipPhotoAfterFailure = () => {
+    setPhotoFile(null);
+    setPhotoUploadError("");
+    setPhotoRejectionError("");
+    router.push("/events/marathon/payment");
   };
 
   return (
@@ -236,6 +298,43 @@ export default function DetailsView() {
             <FieldError message={errors.tshirtSize} />
           </fieldset>
 
+          {/* Photo (optional) */}
+          <fieldset>
+            <legend className="font-poppins font-bold text-xs text-maroon-600 uppercase tracking-widest mb-3">
+              Passport Size Photo (Optional)
+            </legend>
+            <PhotoUpload
+              file={photoFile}
+              onSelect={setPhotoFile}
+              rejectionError={photoRejectionError}
+              onRejectionError={setPhotoRejectionError}
+              disabled={loading || photoUploading}
+            />
+            {photoUploadError && (
+              <div role="alert" className="mt-3 bg-red-50 px-4 py-3 rounded-xl">
+                <p className="text-red-500 text-sm font-inter">{photoUploadError}</p>
+                <div className="flex gap-4 mt-2">
+                  <button
+                    type="button"
+                    onClick={handleRetryPhotoUpload}
+                    disabled={photoUploading}
+                    className="text-xs font-poppins font-semibold text-primary hover:underline disabled:opacity-50"
+                  >
+                    Retry Upload
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSkipPhotoAfterFailure}
+                    disabled={photoUploading}
+                    className="text-xs font-poppins font-semibold text-navy/60 hover:underline disabled:opacity-50"
+                  >
+                    Continue Without Photo
+                  </button>
+                </div>
+              </div>
+            )}
+          </fieldset>
+
           {/* Emergency contact */}
           <fieldset className="space-y-5 pt-2 border-t-2 border-primary/10">
             <legend className="font-poppins font-bold text-xs text-maroon-600 uppercase tracking-widest mb-1 pt-5">
@@ -265,7 +364,7 @@ export default function DetailsView() {
             <button
               type="button"
               onClick={() => router.push("/events/marathon/verify-email")}
-              disabled={loading}
+              disabled={loading || photoUploading}
               className="flex-1 border-2 border-navy/20 text-navy font-poppins font-bold text-sm tracking-wider uppercase py-4 rounded-xl hover:border-navy/40 hover:bg-navy/5 transition-all duration-300 disabled:opacity-50"
             >
               Back
@@ -273,11 +372,11 @@ export default function DetailsView() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={loading}
+              disabled={loading || photoUploading || !!photoRejectionError}
               className="flex-[2] flex items-center justify-center gap-2 bg-gradient-to-r from-maroon-600 to-primary text-white font-poppins font-bold text-sm tracking-wider uppercase py-4 rounded-xl hover:brightness-110 transition-all duration-300 shadow-orange disabled:opacity-70"
             >
-              {loading ? <Loader2 size={16} className="animate-spin" /> : null}
-              Continue to Payment
+              {loading || photoUploading ? <Loader2 size={16} className="animate-spin" /> : null}
+              {photoUploading ? "Uploading Photo…" : "Continue to Payment"}
             </button>
           </div>
         </div>
