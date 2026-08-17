@@ -128,6 +128,68 @@ const sections = [
   },
   {
     number: "14",
+    title: "Event Registration – Our CM Our Pride Mega Marathon 2026",
+    content: [
+      "This section sets out additional terms that apply specifically to registration for the Our CM Our Pride – Mega Marathon 2026, available through the Website at /events/marathon/register. Key event details are:",
+    ],
+    list: [
+      "Event: Our CM Our Pride – Mega Marathon 2026",
+      "Organizer: Great Indian Movement",
+      "Date: 19 September 2026",
+      "Venue: Napier Bridge, Chennai",
+      "Distance: 5 KM",
+      "Registration Deadline: 13 September 2026",
+      "Physical Participant Fee: ₹399",
+      "E-Participant Fee: ₹52",
+    ],
+    content2: [
+      "By registering for the Mega Marathon 2026, you agree to the following, in addition to the general Terms and Conditions above:",
+    ],
+    list2: [
+      "Eligibility: Registration is open to individuals who meet the eligibility criteria communicated by the organizer for the applicable participation category (Physical Participant or E-Participant).",
+      "Accurate information: You must provide accurate, current and complete information at registration, including full name, age, gender, blood group, mobile number, email address, city, category and emergency contact details. False information may result in cancellation of your registration without refund.",
+      "Email/mobile verification: Registration requires verification of the email address (and, where applicable, mobile number) you provide, typically using a one-time verification code.",
+      "Pledge: Where the registration flow includes an event pledge, continuing with registration constitutes your acceptance of that pledge.",
+      "Payment processing: Registration fees are collected online through the Website's payment gateway, as described in the Payments section below.",
+      "Registration confirmation: Your registration is confirmed only after successful payment verification. Submitting the registration form without a successfully verified payment does not create a confirmed registration.",
+      "Registration ID: A unique registration ID is generated and emailed to you once your registration is confirmed.",
+      "QR code / digital entry pass: A QR code, and for Physical Participants a digital entry pass, is generated after successful registration. You are responsible for retaining and presenting this pass as required at the event.",
+      "Physical event participation: Physical Participants are expected to attend the venue on the event date and to follow the instructions of organizers, marshals and volunteers.",
+      "E-Participant participation: E-Participants support the event virtually and are not required to be physically present at the venue. E-Participants receive a digital participation certificate as described in our Shipping & Delivery Policy.",
+      "T-shirt size: T-shirt size selections made at registration are final once submitted. We make reasonable efforts to fulfil the size selected but cannot guarantee availability of every size.",
+      "Event kit / medal / certificate: Distribution details for the event kit, T-shirt, medal and certificate applicable to your participation category will be communicated by the organizer before or around the event date.",
+      "Event schedule changes: The organizer may make reasonable changes to the event schedule, route, timing or format where necessary, and will endeavour to communicate such changes in advance.",
+      "Event postponement: The organizer may postpone the event where circumstances make this necessary or advisable, including weather, safety, regulatory or logistical considerations.",
+      "Event cancellation: The organizer may cancel the event where circumstances require it. Our Cancellation & Refund Policy applies in such cases.",
+      "Participant responsibilities: You are responsible for your own conduct, belongings and compliance with event instructions and applicable law during the event.",
+      "Medical / fitness responsibility: Participation involves physical exertion. You are responsible for assessing your own fitness and medical suitability to participate, and are encouraged to consult a medical professional if in doubt. Nothing on the Website constitutes medical advice.",
+      "Right to refuse or cancel registration: The organizer may refuse, suspend or cancel a registration where legally appropriate, including suspected fraud, duplicate registration, incomplete information, or a breach of these terms.",
+      "Photography / video / media consent: By participating, you consent to being photographed and/or filmed during the event and to reasonable use of such material by the organizer for event documentation and promotional purposes, unless you have separately notified the organizer in writing of an objection.",
+      "Data processing: Registration data is processed in accordance with our Privacy Policy, including the \"Mega Marathon 2026 Registration Data\" section.",
+      "Fraudulent / duplicate registrations: Registrations found to be fraudulent, duplicated, or made using invalid or unauthorised payment methods may be cancelled without refund, subject to our Cancellation & Refund Policy.",
+      "Payment disputes: Please raise any payment-related dispute with us using the contact details below before initiating a chargeback or dispute with your bank or payment provider.",
+      "Refund and cancellation: Refund and cancellation requests are governed by our separate Cancellation & Refund Policy.",
+      "Shipping and delivery: Delivery of digital confirmations, entry passes and certificates, and information on physical item distribution, is described in our separate Shipping & Delivery Policy.",
+      "Contact: For registration-related queries, please use the details in the Contact Us section below.",
+    ],
+  },
+  {
+    number: "15",
+    title: "Payments",
+    content: [
+      "Registration fees for the Mega Marathon 2026 are collected through the Website's authorised online payment gateway. Razorpay may process payments on behalf of the organizer, Great Indian Movement, for this purpose. Razorpay is a third-party payment service provider, not the event organizer, and its own terms and privacy practices apply to its handling of your payment.",
+    ],
+    list: [
+      "Available payment methods may include UPI, debit cards, credit cards, net banking and other methods supported by the payment gateway, as shown at checkout.",
+      "The final payment amount is clearly displayed before you confirm payment.",
+      "Registration is considered confirmed only after successful payment verification by the payment gateway and our systems.",
+      "A failed, cancelled, or interrupted payment does not automatically create a confirmed registration.",
+      "Duplicate or incorrectly charged payments are reviewed and handled in accordance with our Cancellation & Refund Policy.",
+      "You should retain your payment/transaction reference for any future correspondence about your registration.",
+    ],
+  },
+  {
+    number: "16",
     title: "Contact Us",
     content: [
       "If you have any questions about these Terms and Conditions, please contact us:",
@@ -164,11 +226,12 @@ export default function TermsAndConditionsPage() {
               Terms &amp; Conditions
             </h1>
             <p className="text-sm text-slate-500 mb-5">
-              Last Updated: <strong className="text-slate-700">June 18, 2026</strong>
+              Last Updated: <strong className="text-slate-700">August 9, 2026</strong>
             </p>
             <p className="text-base text-slate-600 leading-relaxed max-w-2xl">
               Please read these Terms and Conditions carefully before using the Our CM Our Pride
-              website. Your continued use of the platform signifies your agreement to these terms.
+              website or registering for the Mega Marathon 2026. Your continued use of the platform
+              signifies your agreement to these terms.
             </p>
           </div>
         </section>
@@ -197,6 +260,21 @@ export default function TermsAndConditionsPage() {
                       {section.list && (
                         <ul className="space-y-2.5 pl-4">
                           {section.list.map((item, j) => (
+                            <li key={j} className="flex items-start gap-2.5">
+                              <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      {section.content2?.map((para, j) => (
+                        <p key={`c2-${j}`}>{para}</p>
+                      ))}
+
+                      {section.list2 && (
+                        <ul className="space-y-2.5 pl-4">
+                          {section.list2.map((item, j) => (
                             <li key={j} className="flex items-start gap-2.5">
                               <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                               <span>{item}</span>

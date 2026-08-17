@@ -5,6 +5,7 @@ import Footer from "@/components/sections/Footer";
 import EventsHeroSlider from "@/components/events/EventsHeroSlider";
 import EventsIntroSection from "@/components/events/EventsIntroSection";
 import EventsStatsSection from "@/components/events/EventsStatsSection";
+import EventCard from "@/components/events/EventCard";
 import EventsGridSection from "@/components/events/EventsGridSection";
 import EventCategoriesSection from "@/components/events/EventCategoriesSection";
 import EventsCTASection from "@/components/events/EventsCTASection";
@@ -17,6 +18,7 @@ export default function EventsPageClient() {
         <EventsHeroSlider />
         <EventsIntroSection />
         <EventsStatsSection />
+        <EventCard />
         <EventsGridSection />
         <EventCategoriesSection />
         <EventsCTASection />

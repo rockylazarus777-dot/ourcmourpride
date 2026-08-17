@@ -23,11 +23,20 @@ const cookieTypes = [
   {
     name: "Analytics and Performance Cookies",
     purpose:
-      "These cookies collect information about how visitors use our Website — for example, which pages are visited most frequently and whether visitors receive error messages. All information collected is aggregated and anonymous.",
+      "If and when analytics tools are enabled on our Website, they collect information about how visitors use our Website — for example, which pages are visited most frequently and whether visitors receive error messages. All information collected through such tools is aggregated and anonymous.",
     canDisable: true,
     examples: [
-      "Google Analytics cookies (_ga, _gid, _gat) that track page visits, session duration, and referral sources.",
+      "Analytics cookies (such as those set by Google Analytics, where enabled) that track page visits, session duration, and referral sources.",
       "Performance monitoring cookies that identify slow-loading pages or technical errors.",
+    ],
+  },
+  {
+    name: "Payment Gateway Cookies",
+    purpose:
+      "When you register and pay for the Mega Marathon 2026, our payment gateway's checkout script (which may include Razorpay) may set its own cookies or use similar local storage on the payment page to process your transaction securely and to help detect fraud. These are set and controlled by the payment gateway, not by us.",
+    canDisable: false,
+    examples: [
+      "Session and fraud-prevention cookies set by our payment gateway's checkout script during the payment step of event registration.",
     ],
   },
   {
@@ -74,6 +83,7 @@ const sections = [
       "Remember your preferences and settings to improve your browsing experience.",
       "Measure the effectiveness of our civic engagement campaigns and events.",
       "Enable social media sharing and third-party content integrations.",
+      "Process payments securely during event registration, such as for the Mega Marathon 2026, through our payment gateway's checkout flow.",
     ],
     content2: [
       "We are committed to using only those cookies that are necessary for a safe and functional experience, or where we have a clear legitimate interest and have obtained your consent.",
@@ -90,8 +100,9 @@ const sections = [
       "We use a number of third-party services that may place cookies on your device. These include:",
     ],
     list: [
-      "Google Analytics: We use Google Analytics to understand how visitors use our Website. Google Analytics sets cookies to collect information such as the number of visitors, the pages they visit, and the time they spend on each page. This data is anonymised and aggregated. You can learn more about Google's privacy practices at google.com/policies/privacy, and you can opt out of Google Analytics tracking by installing the Google Analytics Opt-out Browser Add-on.",
+      "Google Analytics: Where enabled, Google Analytics helps us understand how visitors use our Website by setting cookies that collect information such as the number of visitors, the pages they visit, and the time they spend on each page. Any such data is anonymised and aggregated. You can learn more about Google's privacy practices at google.com/policies/privacy, and you can opt out of Google Analytics tracking by installing the Google Analytics Opt-out Browser Add-on.",
       "Google Maps: Where map embeds appear on our Website (such as our Contact page), Google may set cookies associated with the Maps service.",
+      "Payment Gateway (Razorpay): When you register for a paid event such as the Mega Marathon 2026, our payment gateway's checkout script, which may include Razorpay, may set cookies or use similar technologies on the payment page to process your transaction and prevent fraud. Please refer to Razorpay's own privacy and cookie practices for more information.",
       "Social Media Platforms: Facebook, Instagram, and other social media platforms may set cookies when share buttons or embedded content from those platforms appear on our pages.",
     ],
     content2: [
@@ -173,11 +184,12 @@ export default function CookiePolicyPage() {
               Cookie Policy
             </h1>
             <p className="text-sm text-slate-500 mb-5">
-              Last Updated: <strong className="text-slate-700">June 18, 2026</strong>
+              Last Updated: <strong className="text-slate-700">August 9, 2026</strong>
             </p>
             <p className="text-base text-slate-600 leading-relaxed max-w-2xl">
               This Cookie Policy explains what cookies are, how Our CM Our Pride uses them, and
-              how you can manage your preferences when visiting our Website.
+              how you can manage your preferences when visiting our Website, including during
+              Mega Marathon 2026 registration and payment.
             </p>
           </div>
         </section>

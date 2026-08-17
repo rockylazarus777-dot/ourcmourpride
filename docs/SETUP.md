@@ -227,3 +227,50 @@ The rest of the codebase (`types/events.ts`, the three Supabase clients) imports
 ```bash
 npx tsc --noEmit
 ```
+
+---
+
+## 10. Our CM Our Pride – Mega Marathon 2026
+
+A second, fully independent registration system lives alongside the setup above: a paid,
+Razorpay-backed marathon with email OTP, QR entry passes, PDF certificates, and an admin
+dashboard. It does not touch the `marathon_registrations` table or `RegistrationWizard`
+described earlier in this document — that table is left as-is.
+
+### 10a. Extra environment variables
+
+`.env.local.example` at the repo root has the full list. Beyond the six variables above, fill in:
+
+| Variable | Where to find it |
+|---|---|
+| `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` | Razorpay Dashboard → Settings → API Keys |
+| `NEXT_PUBLIC_RAZORPAY_KEY_ID` | Same as `RAZORPAY_KEY_ID` — exposed to the browser for Checkout |
+| `RAZORPAY_WEBHOOK_SECRET` | Razorpay Dashboard → Settings → Webhooks (set the webhook URL to `<site>/api/razorpay/webhook`, subscribed to `payment.captured`, `payment.failed`, and `order.paid`) |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` | Your SMTP provider (OTP + confirmation + certificate emails) |
+| `ADMIN_PASSWORD` | Shared password for `/admin/**` |
+| `ADMIN_SESSION_SECRET` | Random secret for signing admin/session tokens — generate with `openssl rand -hex 32` |
+
+### 10b. Database
+
+Run, in order, in the Supabase SQL Editor:
+
+```
+supabase/migrations/20260807000000_marathon2026_registrations.sql
+supabase/storage-setup-marathon2026.sql
+```
+
+This creates the `registrations` and `otp_verifications` tables, the `next_registration_id()` /
+`next_certificate_id()` sequence functions, and the public `marathon-2026-assets` storage bucket.
+
+### 10c. Optional certificate template
+
+If you have a certificate template image, place it at `public/certificates/template.png`.
+`lib/marathon/certificate.ts` will draw the participant name, certificate ID, and QR code on top
+of it. Without it, a clean orange/maroon/gold design is generated automatically.
+
+### 10d. Routes
+
+Public flow: `/events/marathon/register` → `pledge` → `verify-email` → `details` → `payment` →
+`success` → `pass/[registrationId]` or `certificate/[certificateId]`. Certificate authenticity:
+`/verify/[certificateId]`. Admin: `/admin/login`, `/admin` (dashboard), `/admin/checkin` (QR
+scanner).

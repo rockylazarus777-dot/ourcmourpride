@@ -5,6 +5,8 @@ import { Facebook, Twitter, Instagram, Youtube, Heart } from "lucide-react";
 const legalLinks = [
   { label: "Privacy Policy", href: "/privacy-policy" },
   { label: "Terms & Conditions", href: "/terms-and-conditions" },
+  { label: "Cancellation & Refund Policy", href: "/refund-cancellation-policy" },
+  { label: "Shipping & Delivery Policy", href: "/shipping-delivery-policy" },
   { label: "Cookie Policy", href: "/cookie-policy" },
   { label: "Disclaimer", href: "/disclaimer" },
 ];
@@ -159,7 +161,7 @@ export default function Footer() {
       {/* Legal Links */}
       <div className="border-t border-white/10">
         <div className="container-max py-4">
-          <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-0">
+          <div className="flex flex-col items-center gap-2 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-y-2 sm:gap-x-0">
             {legalLinks.map((link, i) => (
               <span key={link.href} className="flex items-center">
                 <Link

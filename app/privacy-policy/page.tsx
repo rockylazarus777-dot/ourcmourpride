@@ -62,7 +62,7 @@ const sections = [
       "We do not sell, rent, or trade your personal information to any third party. We may share your information only in the following limited circumstances:",
     ],
     list: [
-      "With trusted service providers who assist us in operating our website, such as web hosting providers, analytics platforms, and email service providers. These parties are contractually obligated to keep your information confidential and use it only for the purposes for which it was disclosed.",
+      "With trusted service providers who assist us in operating our website and processing event registrations, such as web hosting providers, analytics platforms, email service providers, and our payment gateway (which may include Razorpay) for processing Mega Marathon 2026 registration payments. These parties are contractually obligated to keep your information confidential and use it only for the purposes for which it was disclosed.",
       "With law enforcement, government authorities, or regulatory bodies when we are legally required to do so, or when disclosure is necessary to protect the rights, safety, or property of Our CM Our Pride, our users, or the public.",
       "In connection with any merger, acquisition, or transfer of assets, in which case we will notify you before your personal information is transferred and becomes subject to a different privacy policy.",
     ],
@@ -132,6 +132,48 @@ const sections = [
   },
   {
     number: "12",
+    title: "Mega Marathon 2026 Registration Data",
+    content: [
+      "In addition to the general information described above, when you register for the Our CM Our Pride – Mega Marathon 2026 through /events/marathon/register, we collect the following registration-specific information:",
+    ],
+    list: [
+      "Full name",
+      "Age",
+      "Gender",
+      "Blood group",
+      "Mobile number",
+      "Email address",
+      "City",
+      "Participant category",
+      "T-shirt size",
+      "Emergency contact name",
+      "Emergency contact number",
+      "Payment/transaction information (such as amount, payment status, and a payment reference from our payment gateway)",
+      "Registration ID",
+      "QR code information",
+      "Check-in status",
+      "Certificate information (for E-Participants)",
+    ],
+    content2: [
+      "Your card, UPI, or net banking credentials are entered and processed directly by our payment gateway (which may include Razorpay) and are not stored on our servers, except for non-sensitive references such as a payment ID, order ID, and payment status that we retain against your registration record.",
+      "We use the registration information listed above for the following purposes:",
+    ],
+    list2: [
+      "Registration processing and record-keeping.",
+      "Participant identity verification, including email/mobile verification.",
+      "Payment confirmation and reconciliation.",
+      "Event-related communication, including confirmations, reminders and reporting instructions.",
+      "Check-in at the event venue using your QR code and registration ID.",
+      "T-shirt and event-kit size allocation.",
+      "Emergency contact use and on-ground event administration, where necessary for participant safety.",
+      "Certificate generation and verification for E-Participants.",
+      "Fraud prevention, including detection of duplicate or fraudulent registrations.",
+      "Customer support in relation to your registration, payment, or certificate.",
+      "Legal, accounting, or record-keeping requirements where applicable.",
+    ],
+  },
+  {
+    number: "13",
     title: "Contact Us",
     content: [
       "If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please do not hesitate to contact us:",
@@ -168,11 +210,12 @@ export default function PrivacyPolicyPage() {
               Privacy Policy
             </h1>
             <p className="text-sm text-slate-500 mb-5">
-              Last Updated: <strong className="text-slate-700">June 18, 2026</strong>
+              Last Updated: <strong className="text-slate-700">August 9, 2026</strong>
             </p>
             <p className="text-base text-slate-600 leading-relaxed max-w-2xl">
               This policy explains how Our CM Our Pride collects, uses, and safeguards your
-              personal information when you interact with our civic engagement platform.
+              personal information when you interact with our civic engagement platform, including
+              when you register for the Mega Marathon 2026.
             </p>
           </div>
         </section>

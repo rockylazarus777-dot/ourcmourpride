@@ -25,6 +25,12 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "picsum.photos",
       },
+      {
+        // Supabase Storage public URLs (marathon-2026-assets bucket: QR codes,
+        // entry passes, certificates).
+        protocol: "https",
+        hostname: "*.supabase.co",
+      },
     ],
   },
 };

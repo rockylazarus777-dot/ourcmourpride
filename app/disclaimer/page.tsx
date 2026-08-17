@@ -86,8 +86,9 @@ const sections = [
     number: "07",
     title: "Event and Programme Information",
     content: [
-      "Information about events, community programmes, marathons, and civic initiatives published on this Website is subject to change without prior notice. Dates, venues, registration details, and programme content may be updated, postponed, or cancelled due to circumstances outside our control.",
-      "We strongly recommend that you verify current event details directly with our team before making travel arrangements or commitments. Contact us at infoourcmourpride@gmail.com or call +91 63822 07898 to confirm current information.",
+      "Information about events, community programmes, marathons, and civic initiatives published on this Website — including the Our CM Our Pride Mega Marathon 2026 — is subject to change without prior notice. Dates, venues, registration details, and programme content may be updated, postponed, or cancelled due to circumstances beyond our reasonable control, subject to applicable law.",
+      "We strongly recommend that you rely on official communications from the organizer (by email or on the Website) for final event instructions, and that you verify current event details with our team before making travel arrangements or commitments. Contact us at infoourcmourpride@gmail.com or call +91 63822 07898 to confirm current information.",
+      "Information published about the Mega Marathon 2026, or any other event, should not be interpreted as medical advice. If you intend to participate in a physical run, you are responsible for determining your own fitness and ability to participate, and are encouraged to consult a qualified medical professional if you have any health concerns before doing so.",
     ],
   },
   {
@@ -150,7 +151,7 @@ export default function DisclaimerPage() {
               Disclaimer
             </h1>
             <p className="text-sm text-slate-500 mb-5">
-              Last Updated: <strong className="text-slate-700">June 18, 2026</strong>
+              Last Updated: <strong className="text-slate-700">August 9, 2026</strong>
             </p>
             <p className="text-base text-slate-600 leading-relaxed max-w-2xl">
               Please read this Disclaimer carefully. It sets out important limitations about the
