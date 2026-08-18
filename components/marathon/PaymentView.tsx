@@ -17,8 +17,21 @@ import type {
   CreateOrderResponse,
   VerifyPaymentRequest,
   VerifyPaymentResponse,
+  CreatePaymentLinkRequest,
+  CreatePaymentLinkResponse,
   ApiErrorResponse,
 } from "@/types/marathon";
+
+/**
+ * "link" (default): redirect to a unique Razorpay Payment Link — used
+ * while Razorpay Checkout is awaiting live approval.
+ * "checkout": the original Razorpay Checkout.js flow, kept fully
+ * intact as a rollback — set NEXT_PUBLIC_MARATHON_PAYMENT_MODE=checkout
+ * to switch back without a code change.
+ */
+type PaymentMode = "link" | "checkout";
+const PAYMENT_MODE: PaymentMode =
+  process.env.NEXT_PUBLIC_MARATHON_PAYMENT_MODE === "checkout" ? "checkout" : "link";
 
 declare global {
   interface Window {
@@ -55,7 +68,46 @@ export default function PaymentView() {
 
   const amount = PARTICIPANT_FEES[draft.participantType];
 
-  const payNow = async () => {
+  // New default flow: create a unique Payment Link server-side and
+  // redirect the browser to Razorpay's hosted payment page. No
+  // Razorpay credentials ever reach the client.
+  const payWithLink = async () => {
+    setError("");
+    const draftId = draft.draftId;
+    if (!draftId) return;
+    if (!draft.statusToken) {
+      setError("Your registration session has expired. Please start again from the Details step.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/marathon/payment/create-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          draftId,
+          statusToken: draft.statusToken,
+        } satisfies CreatePaymentLinkRequest),
+      });
+      const data = (await res.json()) as CreatePaymentLinkResponse | ApiErrorResponse;
+
+      if (!res.ok || !("shortUrl" in data)) {
+        setError("error" in data ? data.error : "Failed to start payment.");
+        setLoading(false);
+        return;
+      }
+
+      window.location.href = data.shortUrl;
+    } catch {
+      setError("Failed to start payment. Please try again.");
+      setLoading(false);
+    }
+  };
+
+  // Original Razorpay Checkout.js flow — kept fully intact as a
+  // rollback fallback (NEXT_PUBLIC_MARATHON_PAYMENT_MODE=checkout).
+  const payWithCheckout = async () => {
     setError("");
     const draftId = draft.draftId;
     if (!draftId) return;
@@ -168,9 +220,18 @@ export default function PaymentView() {
     }
   };
 
+  const payNow = PAYMENT_MODE === "checkout" ? payWithCheckout : payWithLink;
+
   return (
     <>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" onReady={() => setScriptReady(true)} onLoad={() => setScriptReady(true)} />
+      {PAYMENT_MODE === "checkout" && (
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="afterInteractive"
+          onReady={() => setScriptReady(true)}
+          onLoad={() => setScriptReady(true)}
+        />
+      )}
       <StepProgress current={5} />
       <section className="container-max py-10 sm:py-14 max-w-md">
         <div className="text-center mb-8">
@@ -227,7 +288,7 @@ export default function PaymentView() {
           className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-maroon-600 to-primary text-white font-poppins font-bold text-sm tracking-widest uppercase py-4 rounded-xl hover:brightness-110 transition-all duration-300 shadow-orange disabled:opacity-70"
         >
           {loading ? <Loader2 size={16} className="animate-spin" /> : null}
-          Pay ₹{amount} Now
+          {PAYMENT_MODE === "checkout" ? `Pay ₹${amount} Now` : "Continue to Payment"}
         </button>
 
         <p className="text-center font-inter text-xs text-navy/40 mt-4">

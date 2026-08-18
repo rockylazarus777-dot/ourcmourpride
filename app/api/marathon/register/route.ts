@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { validateRegisterRequest } from "@/lib/marathon/validation";
-import { verifyEmailVerifiedToken } from "@/lib/admin/session";
+import { verifyEmailVerifiedToken, createRegistrationStatusToken } from "@/lib/admin/session";
 import { PARTICIPANT_FEES } from "@/types/marathon";
 import type { RegisterResponse, ApiErrorResponse } from "@/types/marathon";
 import type { RegistrationInsert } from "@/types/supabase";
@@ -53,5 +53,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json<ApiErrorResponse>({ error: "Failed to create registration. Please try again." }, { status: 500 });
   }
 
-  return NextResponse.json<RegisterResponse>({ draftId: row.id, amount });
+  return NextResponse.json<RegisterResponse>({
+    draftId: row.id,
+    amount,
+    statusToken: createRegistrationStatusToken(row.id),
+  });
 }

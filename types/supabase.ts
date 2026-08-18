@@ -95,6 +95,9 @@ export interface Database {
           payment_id: string | null;
           razorpay_order_id: string | null;
           razorpay_signature: string | null;
+          razorpay_payment_link_id: string | null;
+          razorpay_payment_link_reference_id: string | null;
+          razorpay_payment_link_url: string | null;
           certificate_id: string | null;
           certificate_url: string | null;
           qr_code_url: string | null;
@@ -128,6 +131,9 @@ export interface Database {
           payment_id?: string | null;
           razorpay_order_id?: string | null;
           razorpay_signature?: string | null;
+          razorpay_payment_link_id?: string | null;
+          razorpay_payment_link_reference_id?: string | null;
+          razorpay_payment_link_url?: string | null;
           certificate_id?: string | null;
           certificate_url?: string | null;
           qr_code_url?: string | null;

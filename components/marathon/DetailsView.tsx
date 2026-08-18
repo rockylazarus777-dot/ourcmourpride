@@ -159,7 +159,7 @@ export default function DetailsView() {
         return;
       }
 
-      updateDraft({ draftId: data.draftId });
+      updateDraft({ draftId: data.draftId, statusToken: data.statusToken });
       setPendingDraftId(data.draftId);
 
       // Registration row now exists as 'pending' (unpaid). If a photo was

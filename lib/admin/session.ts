@@ -82,3 +82,22 @@ export function verifyEmailVerifiedToken(token: string | undefined, email: strin
   const payload = verifySignedToken<{ purpose?: string; email?: string }>(token);
   return payload?.purpose === "email_verified" && payload?.email?.toLowerCase() === email.toLowerCase();
 }
+
+/* ── Registration status token (payment flow) ─────────────────*/
+// Issued once at /api/marathon/register and echoed back by the client
+// on the Payment Link creation and status-check calls. Proves "this
+// browser completed the OTP-gated registration for this exact draft"
+// without a full session system — and, critically, means knowing a
+// draftId alone is never enough to read another participant's status.
+
+const REGISTRATION_STATUS_TTL_SECONDS = 60 * 60 * 2; // 2 hours — covers Payment Link checkout + webhook delay
+
+export function createRegistrationStatusToken(draftId: number): string {
+  return createSignedToken({ purpose: "registration_status", draftId }, REGISTRATION_STATUS_TTL_SECONDS);
+}
+
+export function verifyRegistrationStatusToken(token: string | undefined, draftId: number): boolean {
+  if (!token) return false;
+  const payload = verifySignedToken<{ purpose?: string; draftId?: number }>(token);
+  return payload?.purpose === "registration_status" && payload?.draftId === draftId;
+}

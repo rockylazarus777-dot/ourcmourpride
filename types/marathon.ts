@@ -57,6 +57,8 @@ export interface MarathonDraftState {
   emergencyContactName: string;
   emergencyContactPhone: string;
   draftId: number | null;
+  /** Signed proof that this browser completed the OTP-gated registration for draftId — required by the Payment Link and status-check APIs. */
+  statusToken: string | null;
   photoDriveFileId: string | null;
   photoDriveUrl: string | null;
   razorpayOrderId: string | null;
@@ -82,6 +84,7 @@ export const INITIAL_MARATHON_DRAFT: MarathonDraftState = {
   emergencyContactName: "",
   emergencyContactPhone: "",
   draftId: null,
+  statusToken: null,
   photoDriveFileId: null,
   photoDriveUrl: null,
   razorpayOrderId: null,
@@ -137,6 +140,8 @@ export interface RegisterRequest {
 export interface RegisterResponse {
   draftId: number;
   amount: number;
+  /** Echoed back on Payment Link creation / status-check calls. */
+  statusToken: string;
 }
 
 /** multipart/form-data: { draftId: string, photo: File } */
@@ -167,6 +172,35 @@ export interface VerifyPaymentResponse {
   paymentId: string;
   amount: number;
   paymentStatus: "paid";
+}
+
+/**
+ * Payment Link flow (additive alternative to Order/Checkout above,
+ * used while Razorpay Checkout awaits live approval).
+ */
+export interface CreatePaymentLinkRequest {
+  draftId: number;
+  statusToken: string;
+}
+export interface CreatePaymentLinkResponse {
+  shortUrl: string;
+}
+
+export type MarathonPaymentStatus = "pending" | "paid" | "failed";
+
+/**
+ * Server-truth status check for the success page. Deliberately minimal:
+ * no participant PII, no payment identifiers — just enough for the
+ * success page to render.
+ */
+export interface RegistrationStatusRequest {
+  draftId: number;
+  statusToken: string;
+}
+export interface RegistrationStatusResponse {
+  paymentStatus: MarathonPaymentStatus;
+  registrationId: string | null;
+  certificateId: string | null;
 }
 
 export interface ApiErrorResponse {
