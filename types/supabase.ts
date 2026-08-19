@@ -147,47 +147,6 @@ export interface Database {
         Relationships: [];
       };
 
-      /**
-       * Audit trail for genuine Razorpay Payment Link payments that
-       * couldn't be cleanly matched to a pending `registrations` row
-       * (wrong payer email, wrong amount, unrecognized Payment Link
-       * id, or an ambiguous multi-match). Reconciled manually by an
-       * admin — never written to by anything that also marks a
-       * registration paid.
-       */
-      unmatched_payments: {
-        Row: {
-          id: number;
-          razorpay_payment_id: string;
-          payment_link_id: string;
-          payer_email: string | null;
-          payer_phone: string | null;
-          amount: number | null;
-          currency: string;
-          participant_type: "physical" | "e_participant" | null;
-          webhook_event: string;
-          notes: string | null;
-          reconciliation_status: "pending_review" | "resolved" | "ignored";
-          created_at: string;
-        };
-        Insert: {
-          id?: never;
-          razorpay_payment_id: string;
-          payment_link_id: string;
-          payer_email?: string | null;
-          payer_phone?: string | null;
-          amount?: number | null;
-          currency?: string;
-          participant_type?: "physical" | "e_participant" | null;
-          webhook_event: string;
-          notes?: string | null;
-          reconciliation_status?: "pending_review" | "resolved" | "ignored";
-          created_at?: string;
-        };
-        Update: Partial<Omit<Database["public"]["Tables"]["unmatched_payments"]["Insert"], "id">>;
-        Relationships: [];
-      };
-
       otp_verifications: {
         Row: {
           id: number;
@@ -255,7 +214,3 @@ export type RegistrationUpdate = Database["public"]["Tables"]["registrations"]["
 export type OtpVerificationRow = Database["public"]["Tables"]["otp_verifications"]["Row"];
 export type OtpVerificationInsert = Database["public"]["Tables"]["otp_verifications"]["Insert"];
 export type OtpVerificationUpdate = Database["public"]["Tables"]["otp_verifications"]["Update"];
-
-export type UnmatchedPaymentRow = Database["public"]["Tables"]["unmatched_payments"]["Row"];
-export type UnmatchedPaymentInsert = Database["public"]["Tables"]["unmatched_payments"]["Insert"];
-export type UnmatchedPaymentUpdate = Database["public"]["Tables"]["unmatched_payments"]["Update"];

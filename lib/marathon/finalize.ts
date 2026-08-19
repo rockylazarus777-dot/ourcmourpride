@@ -177,27 +177,3 @@ export async function markPaymentFailed(
 
   return { updated: true };
 }
-
-/**
- * Same as markPaymentFailed above, but keyed by Razorpay Payment Link
- * id instead of order id — used by the Payment Link webhook's
- * cancelled/expired events. Same idempotency guard: never downgrades a
- * row a race has already marked 'paid'.
- */
-export async function markPaymentFailedByPaymentLink(paymentLinkId: string): Promise<{ updated: boolean }> {
-  const supabase = createSupabaseAdminClient();
-
-  const { data: row } = await supabase
-    .from("registrations")
-    .select("id, payment_status")
-    .eq("razorpay_payment_link_id", paymentLinkId)
-    .maybeSingle();
-
-  if (!row || row.payment_status === "paid") {
-    return { updated: false };
-  }
-
-  await supabase.from("registrations").update({ payment_status: "failed" }).eq("id", row.id);
-
-  return { updated: true };
-}

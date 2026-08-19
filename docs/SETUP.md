@@ -243,12 +243,9 @@ described earlier in this document — that table is left as-is.
 
 | Variable | Where to find it |
 |---|---|
-| `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` | Razorpay Dashboard → Settings → API Keys. Not used by the live Payment Link flow — kept only for local/test use and the Checkout.js fallback (`NEXT_PUBLIC_MARATHON_PAYMENT_MODE=checkout`). |
-| `NEXT_PUBLIC_RAZORPAY_KEY_ID` | Same as `RAZORPAY_KEY_ID` — exposed to the browser, only used by the Checkout.js fallback flow |
-| `RAZORPAY_WEBHOOK_SECRET` | Razorpay Dashboard → Settings → Webhooks (set the webhook URL to `<site>/api/razorpay/webhook`, subscribed to `payment.captured`, `payment.failed`, `order.paid`, `payment_link.paid`, `payment_link.cancelled`, `payment_link.expired`) |
-| `RAZORPAY_PHYSICAL_PAYMENT_LINK_ID` / `RAZORPAY_PHYSICAL_PAYMENT_LINK_URL` | Manually create a Payment Link in Razorpay Dashboard → Payment Links for the ₹399 Physical Participant fee. Copy its id (`plink_...`) and short URL (`https://rzp.io/i/...`). |
-| `RAZORPAY_EPARTICIPANT_PAYMENT_LINK_ID` / `RAZORPAY_EPARTICIPANT_PAYMENT_LINK_URL` | Same, for the ₹52 E-Participant fee. |
-| `NEXT_PUBLIC_MARATHON_PAYMENT_MODE` | Optional. `link` (default, or unset) uses the static Payment Link flow; `checkout` rolls back to the original Razorpay Checkout.js flow with no code change. |
+| `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` | Razorpay Dashboard → Settings → API Keys |
+| `NEXT_PUBLIC_RAZORPAY_KEY_ID` | Same as `RAZORPAY_KEY_ID` — exposed to the browser, used by Razorpay Checkout.js to open the payment modal (never the secret) |
+| `RAZORPAY_WEBHOOK_SECRET` | Razorpay Dashboard → Settings → Webhooks (set the webhook URL to `<site>/api/razorpay/webhook`, subscribed to `payment.captured`, `payment.failed`, `order.paid`) |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` | Your SMTP provider (OTP + confirmation + certificate emails) |
 | `ADMIN_PASSWORD` | Shared password for `/admin/**` |
 | `ADMIN_SESSION_SECRET` | Random secret for signing admin/session tokens — generate with `openssl rand -hex 32` |
@@ -265,16 +262,18 @@ supabase/storage-setup-marathon2026.sql
 This creates the `registrations` and `otp_verifications` tables, the `next_registration_id()` /
 `next_certificate_id()` sequence functions, and the public `marathon-2026-assets` storage bucket.
 
-### 10b-1. Payment Links (additive)
+### 10b-1. Unused columns from a retired Payment Link experiment
 
-`supabase/migrations/20260818000000_marathon2026_payment_links.sql` adds three nullable columns
-to `registrations` — `razorpay_payment_link_id`, `razorpay_payment_link_reference_id`,
-`razorpay_payment_link_url`. These date from an earlier per-registration dynamic Payment Link
-design and are no longer written by the current flow (see 10g below), but are left in place —
-purely additive, and every existing row is untouched.
-
-`supabase/migrations/20260819000000_marathon2026_unmatched_payments.sql` adds the
-`unmatched_payments` audit table used by the current static Payment Link flow — see 10g.
+Two earlier migrations —
+`supabase/migrations/20260818000000_marathon2026_payment_links.sql` (adds nullable
+`razorpay_payment_link_id`, `razorpay_payment_link_reference_id`, `razorpay_payment_link_url` to
+`registrations`) and `supabase/migrations/20260819000000_marathon2026_unmatched_payments.sql`
+(adds the `unmatched_payments` table) — supported a Razorpay Payment Link-based payment flow that
+has since been retired in favor of the Orders API + Checkout flow in 10g below. Both migrations
+have already been applied to the database, so neither is removed here; no application code reads
+or writes them anymore. If you want them fully gone, that requires a separate, explicit cleanup
+migration (`DROP TABLE`/`DROP COLUMN`) — not included, since dropping already-applied schema
+should be a deliberate decision, not a side effect of a docs update.
 
 ### 10c. Optional certificate template
 
@@ -346,34 +345,23 @@ supabase/migrations/20260817000000_marathon2026_photo.sql
 
 Adds the nullable `photo_drive_file_id` / `photo_drive_url` columns to `registrations`.
 
-### 10g. Payment flow: static Razorpay Payment Links (default) vs. Checkout (fallback)
+### 10g. Payment flow: Razorpay Orders API + Checkout
 
-Because Razorpay Live API keys are not available, the default payment step uses two **static,
-Dashboard-created Payment Links** — one for Physical (₹399), one for E-Participant (₹52) — instead
-of creating a link (or order) through the API:
+The payment step is `POST /api/marathon/payment/create-order`, which creates a Razorpay Order via
+the API (amount in paise, `receipt`/`notes` carrying the registration's draft id) and stores its
+id as `razorpay_order_id` on the `registrations` row — a one-to-one link between a registration
+and its Order. The browser then opens Razorpay Checkout with that Order id; on completion, the
+client calls `POST /api/marathon/payment/verify`, which verifies the Razorpay payment signature
+server-side (`HMAC_SHA256(order_id + "|" + payment_id, key_secret)`), confirms the Order id on the
+request matches the one stored for that registration, and only then calls
+`finalizePaidRegistration()`.
 
-1. `POST /api/marathon/register` creates (or reuses) a pending `registrations` row.
-2. `POST /api/marathon/payment/create-link` looks up the row's `participant_type` and returns the
-   matching static link URL from `RAZORPAY_PHYSICAL_PAYMENT_LINK_URL` /
-   `RAZORPAY_EPARTICIPANT_PAYMENT_LINK_URL`. It never calls the Razorpay API.
-3. The participant pays on Razorpay's hosted page, using **the same email address** they
-   registered with — the payment step tells them this explicitly, because step 4 depends on it.
-4. Razorpay sends a `payment_link.paid` webhook. `/api/razorpay/webhook` verifies the signature,
-   maps the Payment Link id back to a participant type (`lib/razorpay/paymentLinkConfig.ts`),
-   validates the amount and currency, normalizes the payer email, and looks for exactly one
-   pending registration matching `(email, participant_type)`.
-   - Exactly one match → `finalizePaidRegistration()` (idempotent — a retried webhook is a no-op).
-   - Zero matches, an unrecognized link id, a wrong amount/currency, or more than one match → the
-     payment is **never** silently dropped; it's written to the `unmatched_payments` table for
-     manual admin reconciliation instead.
-
-The original Order/Checkout flow (`create-order`, `payment/verify`, Checkout.js, `RAZORPAY_KEY_ID`
-/ `RAZORPAY_KEY_SECRET`) is untouched and can be restored instantly by setting
-`NEXT_PUBLIC_MARATHON_PAYMENT_MODE=checkout` — no code change, just that env var flipped (requires
-working Razorpay API keys).
-
-Either way, payment confirmation is never taken from the browser: the Razorpay webhook is the sole
-authority that calls `finalizePaidRegistration()`, and the success page
-(`/events/marathon/success`) polls `POST /api/marathon/registration-status` — gated by a
-short-lived signed token issued at registration time — until the database shows
-`payment_status = 'paid'`. It never trusts a returning `?query` param as proof of payment.
+Payment confirmation is never taken from the browser alone: the Razorpay webhook
+(`/api/razorpay/webhook`, subscribed to `payment.captured`, `order.paid`, `payment.failed`) is the
+authoritative, server-to-server source of truth — it looks up the registration by
+`razorpay_order_id` and calls the same idempotent `finalizePaidRegistration()`, so it's a safe
+no-op if the client's own `payment/verify` call already finalized the row (or vice versa). The
+success page (`/events/marathon/success`) polls `POST /api/marathon/registration-status` — gated
+by a short-lived signed token issued at registration time — until the database shows
+`payment_status = 'paid'`. It never trusts a returning `?query` param, redirect, or client-side
+state as proof of payment.

@@ -7,9 +7,7 @@
  * Configure in Razorpay Dashboard → Settings → Webhooks:
  *   URL:    https://<your-domain>/api/razorpay/webhook
  *   Secret: same value as RAZORPAY_WEBHOOK_SECRET
- *   Events: payment.captured, payment.failed, order.paid (Order/Checkout flow)
- *           payment_link.paid, payment_link.cancelled, payment_link.expired
- *           (static Payment Link flow, see lib/razorpay/paymentLinkConfig.ts)
+ *   Events: payment.captured, payment.failed, order.paid
  *
  * Security: the raw request body is read and its signature verified
  * BEFORE any JSON parsing happens. Nothing here ever trusts a payment
@@ -20,10 +18,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyWebhookSignature } from "@/lib/razorpay/client";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { finalizePaidRegistration, markPaymentFailed, markPaymentFailedByPaymentLink } from "@/lib/marathon/finalize";
-import { recordUnmatchedPayment } from "@/lib/marathon/unmatchedPayments";
-import { resolvePaymentLinkById } from "@/lib/razorpay/paymentLinkConfig";
-import { PARTICIPANT_FEES } from "@/types/marathon";
+import { finalizePaidRegistration, markPaymentFailed } from "@/lib/marathon/finalize";
 
 interface RazorpayWebhookPayload {
   event: string;
@@ -33,24 +28,11 @@ interface RazorpayWebhookPayload {
         id?: string;
         order_id?: string;
         error_description?: string;
-        email?: string;
-        contact?: string;
-        amount?: number;
-        currency?: string;
       };
     };
     order?: {
       entity?: {
         id?: string;
-      };
-    };
-    payment_link?: {
-      entity?: {
-        id?: string;
-        reference_id?: string;
-        amount?: number;
-        amount_paid?: number;
-        currency?: string;
       };
     };
   };
@@ -137,181 +119,6 @@ export async function POST(req: NextRequest) {
 
         const { updated } = await markPaymentFailed(orderId, paymentId);
         console.log(`[razorpay:webhook] event="payment.failed" order_id="${orderId}" updated=${updated}`);
-        return NextResponse.json({ received: true });
-      }
-
-      // ── Payment Link flow (two static, Dashboard-created shared
-      //    links — see lib/razorpay/paymentLinkConfig.ts. The site
-      //    never creates a Payment Link; it only maps the incoming
-      //    link id back to a participant type and matches the payer
-      //    email against a pending registration. The Order/Checkout
-      //    cases above are untouched.) ──────────────────────────────
-      case "payment_link.paid": {
-        const paymentLink = event.payload?.payment_link?.entity;
-        const payment = event.payload?.payment?.entity;
-        const linkId = paymentLink?.id;
-        const paymentId = payment?.id;
-
-        if (!linkId || !paymentId) {
-          console.warn(`[razorpay:webhook] event="${eventType}" missing payment_link/payment id, ignoring`);
-          return NextResponse.json({ received: true });
-        }
-
-        const currency = payment?.currency ?? paymentLink?.currency ?? "INR";
-        const amountPaise = payment?.amount ?? paymentLink?.amount_paid ?? paymentLink?.amount ?? null;
-        const payerEmail = payment?.email ? payment.email.trim().toLowerCase() : null;
-        const payerPhone = payment?.contact ?? null;
-
-        const linkConfig = resolvePaymentLinkById(linkId);
-
-        // 1. The Payment Link must be one of our two configured links.
-        if (!linkConfig) {
-          console.warn(`[razorpay:webhook] event="${eventType}" payment_link_id="${linkId}" is not a configured link`);
-          await recordUnmatchedPayment({
-            paymentId,
-            linkId,
-            payerEmail,
-            payerPhone,
-            amountPaise,
-            currency,
-            participantType: null,
-            webhookEvent: eventType,
-            notes: "Payment Link id is not one of the configured static links.",
-          });
-          return NextResponse.json({ received: true });
-        }
-
-        // 2. Currency must be INR.
-        if (currency !== "INR") {
-          console.warn(`[razorpay:webhook] event="${eventType}" unexpected currency="${currency}" for payment_link_id="${linkId}"`);
-          await recordUnmatchedPayment({
-            paymentId,
-            linkId,
-            payerEmail,
-            payerPhone,
-            amountPaise,
-            currency,
-            participantType: linkConfig.participantType,
-            webhookEvent: eventType,
-            notes: `Unexpected currency "${currency}".`,
-          });
-          return NextResponse.json({ received: true });
-        }
-
-        // 3. Amount must exactly match this participant type's fee.
-        const expectedPaise = Math.round(PARTICIPANT_FEES[linkConfig.participantType] * 100);
-        if (amountPaise !== expectedPaise) {
-          console.warn(
-            `[razorpay:webhook] event="${eventType}" amount mismatch for payment_link_id="${linkId}" — expected=${expectedPaise} got=${amountPaise}`
-          );
-          await recordUnmatchedPayment({
-            paymentId,
-            linkId,
-            payerEmail,
-            payerPhone,
-            amountPaise,
-            currency,
-            participantType: linkConfig.participantType,
-            webhookEvent: eventType,
-            notes: `Amount mismatch — expected ${expectedPaise} paise, got ${amountPaise ?? "null"}.`,
-          });
-          return NextResponse.json({ received: true });
-        }
-
-        if (!payerEmail) {
-          console.warn(`[razorpay:webhook] event="${eventType}" payment_id="${paymentId}" has no payer email on the payment entity`);
-          await recordUnmatchedPayment({
-            paymentId,
-            linkId,
-            payerEmail,
-            payerPhone,
-            amountPaise,
-            currency,
-            participantType: linkConfig.participantType,
-            webhookEvent: eventType,
-            notes: "No payer email present on the payment entity.",
-          });
-          return NextResponse.json({ received: true });
-        }
-
-        const supabase = createSupabaseAdminClient();
-
-        // 4. Match against pending registrations by (email, participant_type).
-        const { data: candidates } = await supabase
-          .from("registrations")
-          .select("id")
-          .eq("email", payerEmail)
-          .eq("participant_type", linkConfig.participantType)
-          .eq("payment_status", "pending");
-
-        if (!candidates || candidates.length === 0) {
-          // Not necessarily lost — could be a retried webhook for a
-          // registration this route already finalized. Check before
-          // filing a duplicate unmatched-payment row.
-          const { data: alreadyPaid } = await supabase
-            .from("registrations")
-            .select("id")
-            .eq("email", payerEmail)
-            .eq("participant_type", linkConfig.participantType)
-            .eq("payment_status", "paid")
-            .eq("payment_id", paymentId)
-            .maybeSingle();
-
-          if (alreadyPaid) {
-            return NextResponse.json({ received: true });
-          }
-
-          console.warn(`[razorpay:webhook] event="${eventType}" payment_id="${paymentId}" — no pending registration matched`);
-          await recordUnmatchedPayment({
-            paymentId,
-            linkId,
-            payerEmail,
-            payerPhone,
-            amountPaise,
-            currency,
-            participantType: linkConfig.participantType,
-            webhookEvent: eventType,
-            notes: "No pending registration matched this payer email + participant type.",
-          });
-          return NextResponse.json({ received: true });
-        }
-
-        if (candidates.length > 1) {
-          // Multiple pending registrations share this email + participant
-          // type — never auto-pick one. File for manual admin review.
-          console.warn(`[razorpay:webhook] event="${eventType}" payment_id="${paymentId}" — ${candidates.length} ambiguous matches`);
-          await recordUnmatchedPayment({
-            paymentId,
-            linkId,
-            payerEmail,
-            payerPhone,
-            amountPaise,
-            currency,
-            participantType: linkConfig.participantType,
-            webhookEvent: eventType,
-            notes: `Ambiguous — ${candidates.length} pending registrations matched this payer email + participant type.`,
-          });
-          return NextResponse.json({ received: true });
-        }
-
-        const draft = candidates[0];
-        const result = await finalizePaidRegistration(draft.id, paymentId, linkId, "payment-link-webhook-verified");
-        console.log(
-          `[razorpay:webhook] event="${eventType}" payment_link_id="${linkId}" registration_id="${result.registrationId}"`
-        );
-        return NextResponse.json({ received: true });
-      }
-
-      case "payment_link.cancelled":
-      case "payment_link.expired": {
-        const linkId = event.payload?.payment_link?.entity?.id;
-        if (!linkId) {
-          console.warn(`[razorpay:webhook] event="${eventType}" missing payment_link id, ignoring`);
-          return NextResponse.json({ received: true });
-        }
-
-        const { updated } = await markPaymentFailedByPaymentLink(linkId);
-        console.log(`[razorpay:webhook] event="${eventType}" payment_link_id="${linkId}" updated=${updated}`);
         return NextResponse.json({ received: true });
       }
 

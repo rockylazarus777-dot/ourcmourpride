@@ -57,7 +57,7 @@ export interface MarathonDraftState {
   emergencyContactName: string;
   emergencyContactPhone: string;
   draftId: number | null;
-  /** Signed proof that this browser completed the OTP-gated registration for draftId — required by the Payment Link and status-check APIs. */
+  /** Signed proof that this browser completed the OTP-gated registration for draftId — required by the registration-status API. */
   statusToken: string | null;
   photoDriveFileId: string | null;
   photoDriveUrl: string | null;
@@ -140,7 +140,7 @@ export interface RegisterRequest {
 export interface RegisterResponse {
   draftId: number;
   amount: number;
-  /** Echoed back on Payment Link creation / status-check calls. */
+  /** Echoed back on the registration-status polling calls. */
   statusToken: string;
 }
 
@@ -172,18 +172,6 @@ export interface VerifyPaymentResponse {
   paymentId: string;
   amount: number;
   paymentStatus: "paid";
-}
-
-/**
- * Payment Link flow (additive alternative to Order/Checkout above,
- * used while Razorpay Checkout awaits live approval).
- */
-export interface CreatePaymentLinkRequest {
-  draftId: number;
-  statusToken: string;
-}
-export interface CreatePaymentLinkResponse {
-  shortUrl: string;
 }
 
 export type MarathonPaymentStatus = "pending" | "paid" | "failed";

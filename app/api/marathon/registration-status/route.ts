@@ -1,7 +1,7 @@
 /**
  * Server-truth payment status for the success page. Gated by the same
- * signed statusToken used for Payment Link creation — knowing a
- * draftId alone is never enough to read another participant's status.
+ * signed statusToken issued at registration time — knowing a draftId
+ * alone is never enough to read another participant's status.
  *
  * Deliberately minimal response: no name/email/phone/address, no
  * payment identifiers or secrets — only what the success page needs
