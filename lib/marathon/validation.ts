@@ -2,6 +2,7 @@ import {
   BLOOD_GROUPS,
   CATEGORY_LABELS,
   TSHIRT_SIZES,
+  INTERESTED_IN_UPCOMING_EVENTS_VALUES,
   type RegisterRequest,
 } from "@/types/marathon";
 
@@ -89,6 +90,22 @@ export function validateRegisterRequest(body: unknown): { errors: string[]; data
     errors.push("Enter a valid emergency contact mobile number.");
   }
 
+  // Optional — undefined/null means the participant skipped the question.
+  // Anything else must be exactly one of the three allowed values.
+  let interestedInUpcomingEvents: RegisterRequest["interestedInUpcomingEvents"] = null;
+  if (b.interestedInUpcomingEvents !== undefined && b.interestedInUpcomingEvents !== null) {
+    if (
+      typeof b.interestedInUpcomingEvents !== "string" ||
+      !INTERESTED_IN_UPCOMING_EVENTS_VALUES.includes(
+        b.interestedInUpcomingEvents as (typeof INTERESTED_IN_UPCOMING_EVENTS_VALUES)[number]
+      )
+    ) {
+      errors.push("Invalid value for the upcoming events interest question.");
+    } else {
+      interestedInUpcomingEvents = b.interestedInUpcomingEvents as RegisterRequest["interestedInUpcomingEvents"];
+    }
+  }
+
   if (errors.length > 0) return { errors, data: null };
 
   return {
@@ -108,6 +125,7 @@ export function validateRegisterRequest(body: unknown): { errors: string[]; data
       tshirtSize: b.tshirtSize as RegisterRequest["tshirtSize"],
       emergencyContactName: (b.emergencyContactName as string).trim(),
       emergencyContactPhone: (b.emergencyContactPhone as string).trim(),
+      interestedInUpcomingEvents,
     },
   };
 }

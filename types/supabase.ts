@@ -86,6 +86,7 @@ export interface Database {
           tshirt_size: "XS" | "S" | "M" | "L" | "XL" | "XXL";
           emergency_contact_name: string;
           emergency_contact_phone: string;
+          interested_in_upcoming_events: "yes" | "maybe" | "no" | null;
           pledge_accepted: boolean;
           otp_verified: boolean;
           photo_drive_file_id: string | null;
@@ -122,6 +123,7 @@ export interface Database {
           tshirt_size: "XS" | "S" | "M" | "L" | "XL" | "XXL";
           emergency_contact_name: string;
           emergency_contact_phone: string;
+          interested_in_upcoming_events?: "yes" | "maybe" | "no" | null;
           pledge_accepted?: boolean;
           otp_verified?: boolean;
           photo_drive_file_id?: string | null;
@@ -192,6 +194,7 @@ export interface Database {
       mm2026_category: "student" | "public" | "government_employee";
       mm2026_tshirt_size: "XS" | "S" | "M" | "L" | "XL" | "XXL";
       mm2026_payment_status: "pending" | "paid" | "failed";
+      mm2026_interest_level: "yes" | "maybe" | "no";
     };
   };
 }

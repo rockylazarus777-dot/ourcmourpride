@@ -11,10 +11,13 @@ import {
   BLOOD_GROUPS,
   CATEGORY_LABELS,
   TSHIRT_SIZES,
+  INTERESTED_IN_UPCOMING_EVENTS_VALUES,
+  INTERESTED_IN_UPCOMING_EVENTS_LABELS,
   type Gender,
   type BloodGroup,
   type MarathonCategory,
   type TshirtSize,
+  type InterestedInUpcomingEvents,
 } from "@/types/marathon";
 import type {
   RegisterRequest,
@@ -40,6 +43,9 @@ export default function DetailsView() {
   const [tshirtSize, setTshirtSize] = useState<TshirtSize | "">(draft.tshirtSize);
   const [emergencyContactName, setEmergencyContactName] = useState(draft.emergencyContactName);
   const [emergencyContactPhone, setEmergencyContactPhone] = useState(draft.emergencyContactPhone);
+  const [interestedInUpcomingEvents, setInterestedInUpcomingEvents] = useState<InterestedInUpcomingEvents | "">(
+    draft.interestedInUpcomingEvents
+  );
 
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoRejectionError, setPhotoRejectionError] = useState("");
@@ -126,6 +132,7 @@ export default function DetailsView() {
       tshirtSize,
       emergencyContactName,
       emergencyContactPhone,
+      interestedInUpcomingEvents,
     });
 
     setLoading(true);
@@ -145,6 +152,7 @@ export default function DetailsView() {
         tshirtSize: tshirtSize as TshirtSize,
         emergencyContactName: emergencyContactName.trim(),
         emergencyContactPhone: emergencyContactPhone.trim(),
+        interestedInUpcomingEvents: interestedInUpcomingEvents === "" ? null : interestedInUpcomingEvents,
       };
 
       const res = await fetch("/api/marathon/register", {
@@ -353,6 +361,19 @@ export default function DetailsView() {
               </div>
             </div>
           </fieldset>
+
+          {/* Interested in upcoming events (optional) */}
+          <div>
+            <FieldLabel>Would you be interested in participating in our upcoming events?</FieldLabel>
+            <PillGroup
+              options={INTERESTED_IN_UPCOMING_EVENTS_VALUES}
+              value={interestedInUpcomingEvents}
+              onChange={setInterestedInUpcomingEvents}
+              ariaLabel="Interested in participating in our upcoming events"
+              columns={1}
+              labels={INTERESTED_IN_UPCOMING_EVENTS_LABELS}
+            />
+          </div>
 
           {submitError && (
             <p role="alert" className="text-red-500 text-sm font-inter text-center bg-red-50 px-4 py-3 rounded-xl">

@@ -17,6 +17,7 @@ const COLUMNS = [
   "tshirt_size",
   "emergency_contact_name",
   "emergency_contact_phone",
+  "interested_in_upcoming_events",
   "payment_amount",
   "payment_status",
   "payment_id",
@@ -30,11 +31,19 @@ const COLUMNS = [
 /** Display label for a column's header cell — defaults to the raw column name. */
 const COLUMN_LABELS: Partial<Record<(typeof COLUMNS)[number], string>> = {
   photo_drive_url: "Passport Photo URL",
+  interested_in_upcoming_events: "Interested In Upcoming Events",
 };
 
 function columnLabel(column: (typeof COLUMNS)[number]): string {
   return COLUMN_LABELS[column] ?? column;
 }
+
+/** Human-readable values for the upcoming-events interest column — null exports as blank. */
+const INTEREST_EXPORT_LABELS: Record<string, string> = {
+  yes: "Yes",
+  maybe: "Maybe / Keep me informed",
+  no: "No",
+};
 
 function toCsv(rows: Record<string, unknown>[]): string {
   const escape = (v: unknown) => {
@@ -64,7 +73,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Failed to export registrations." }, { status: 500 });
   }
 
-  const rows = (data ?? []) as unknown as Record<string, unknown>[];
+  const rows = (data ?? []).map((row) => {
+    const r = row as unknown as Record<string, unknown>;
+    const interest = r.interested_in_upcoming_events;
+    return {
+      ...r,
+      interested_in_upcoming_events: typeof interest === "string" ? (INTEREST_EXPORT_LABELS[interest] ?? interest) : "",
+    };
+  });
 
   if (format === "csv") {
     return new NextResponse(toCsv(rows), {

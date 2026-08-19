@@ -9,30 +9,44 @@ export async function GET(req: NextRequest) {
 
   const supabase = createSupabaseAdminClient();
 
-  const [{ count: total }, { count: physical }, { count: eParticipant }, { count: checkedIn }, { data: paidRows }] =
-    await Promise.all([
-      supabase.from("registrations").select("*", { count: "exact", head: true }).eq("payment_status", "paid"),
-      supabase
-        .from("registrations")
-        .select("*", { count: "exact", head: true })
-        .eq("payment_status", "paid")
-        .eq("participant_type", "physical"),
-      supabase
-        .from("registrations")
-        .select("*", { count: "exact", head: true })
-        .eq("payment_status", "paid")
-        .eq("participant_type", "e_participant"),
-      supabase
-        .from("registrations")
-        .select("*", { count: "exact", head: true })
-        .eq("check_in_status", true),
-      supabase.from("registrations").select("payment_amount").eq("payment_status", "paid"),
-    ]);
+  const [
+    { count: total },
+    { count: paid },
+    { count: pending },
+    { count: failed },
+    { count: physical },
+    { count: eParticipant },
+    { count: checkedIn },
+    { data: paidRows },
+  ] = await Promise.all([
+    supabase.from("registrations").select("*", { count: "exact", head: true }),
+    supabase.from("registrations").select("*", { count: "exact", head: true }).eq("payment_status", "paid"),
+    supabase.from("registrations").select("*", { count: "exact", head: true }).eq("payment_status", "pending"),
+    supabase.from("registrations").select("*", { count: "exact", head: true }).eq("payment_status", "failed"),
+    supabase
+      .from("registrations")
+      .select("*", { count: "exact", head: true })
+      .eq("payment_status", "paid")
+      .eq("participant_type", "physical"),
+    supabase
+      .from("registrations")
+      .select("*", { count: "exact", head: true })
+      .eq("payment_status", "paid")
+      .eq("participant_type", "e_participant"),
+    supabase
+      .from("registrations")
+      .select("*", { count: "exact", head: true })
+      .eq("check_in_status", true),
+    supabase.from("registrations").select("payment_amount").eq("payment_status", "paid"),
+  ]);
 
   const revenue = (paidRows ?? []).reduce((sum, r) => sum + Number(r.payment_amount), 0);
 
   return NextResponse.json({
     totalRegistrations: total ?? 0,
+    paidCount: paid ?? 0,
+    pendingCount: pending ?? 0,
+    failedCount: failed ?? 0,
     physicalCount: physical ?? 0,
     eParticipantCount: eParticipant ?? 0,
     checkedInCount: checkedIn ?? 0,

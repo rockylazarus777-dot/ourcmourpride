@@ -7,17 +7,23 @@ import { Check } from "lucide-react";
 import { useMarathonRegistration } from "./MarathonRegistrationProvider";
 import StepProgress from "./StepProgress";
 
+const PLEDGE_INTRO_LINES = [
+  "I Run for a Healthy Tamil Nadu",
+  "I Run for a United Tamil Nadu",
+  "I Run for a Stronger Democracy",
+];
+
 const PLEDGE_POINTS = [
-  "I pledge to make fitness a part of my daily life.",
-  "I pledge to protect and preserve a clean, green Tamil Nadu.",
-  "I pledge to respect every individual and promote unity among all communities.",
-  "I pledge to inspire my family and friends to lead a healthy lifestyle.",
-  "I pledge to uphold discipline, honesty, and responsibility in everything I do.",
-  "I pledge to support road safety and follow traffic rules at all times.",
-  "I pledge to care for nature by reducing waste and conserving resources.",
-  "I pledge to encourage sports, physical activity, and positive living in my community.",
-  "I pledge to contribute towards building a stronger, healthier, and more empowered Tamil Nadu.",
-  "I pledge to stand united with pride, serving my people and my state with dedication.",
+  "I pledge to be a responsible and active citizen of our society.",
+  "I will respect Democracy, the Constitution, Equality and Human Dignity.",
+  "I will stand for Unity, Peace and Social Harmony, and respect every individual irrespective of their background.",
+  "I pledge to create awareness about Government Welfare Schemes and help ensure that eligible people receive the benefits meant for them.",
+  "I will actively support people-centric welfare, education, healthcare, women empowerment, youth development, environmental protection and social responsibility.",
+  "I will listen to the needs of my community and contribute my time, knowledge and effort towards finding positive solutions.",
+  "I pledge to keep my surroundings Clean, Green, Healthy and Safe.",
+  "I will promote fitness, healthy living, road safety and responsible citizenship.",
+  "I will never spread hatred, discrimination or misinformation.",
+  "I believe that democracy becomes stronger when citizens participate, care and serve.",
 ];
 
 export default function PledgeView() {
@@ -44,28 +50,51 @@ export default function PledgeView() {
         </div>
 
         <div className="bg-gradient-to-br from-orange-50 to-white rounded-2xl p-5 sm:p-7 mb-6 border border-primary/15 max-h-96 overflow-y-auto overscroll-contain">
-          <ul className="space-y-3.5" aria-label="Pledge points">
+          <motion.p
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4 }}
+            className="font-poppins font-bold text-base sm:text-lg text-navy text-center mb-4"
+          >
+            I Pledge Today
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, delay: 0.03 }}
+            className="text-center mb-5"
+          >
+            {PLEDGE_INTRO_LINES.map((line, i) => (
+              <p key={i} className="font-inter text-navy/80 text-sm leading-relaxed">
+                {line}
+              </p>
+            ))}
+          </motion.div>
+
+          <div className="space-y-3.5" aria-label="Pledge">
             {PLEDGE_POINTS.map((point, i) => (
-              <motion.li
+              <motion.p
                 key={i}
                 initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: i * 0.03 }}
-                className="flex items-start gap-3"
+                transition={{ duration: 0.4, delay: 0.06 + i * 0.03 }}
+                className="font-inter text-navy/75 text-sm leading-relaxed"
               >
-                <div
-                  className="w-6 h-6 bg-primary/15 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                  aria-hidden="true"
-                >
-                  <span className="text-primary font-bold font-poppins text-xs leading-none">{i + 1}</span>
-                </div>
-                <span className="font-inter text-navy/75 text-sm leading-relaxed">{point}</span>
-              </motion.li>
+                {point}
+              </motion.p>
             ))}
-          </ul>
-          <p className="font-poppins font-bold text-sm text-maroon-600 text-center mt-5 pt-5 border-t border-primary/10">
-            Together We Run. Together We Rise. Together We Build a Stronger Tamil Nadu. 🏃🇮🇳
-          </p>
+          </div>
+
+          <div className="text-center mt-5 pt-5 border-t border-primary/10">
+            <p className="font-inter text-navy/75 text-sm leading-relaxed mb-1">Together, let us build a</p>
+            <p className="font-poppins font-bold text-sm text-maroon-600 mb-3">
+              HEALTHY • UNITED • RESPONSIBLE TAMIL NADU
+            </p>
+            <p className="font-inter text-navy/75 text-sm italic leading-relaxed">
+              “My Voice Matters. My Responsibility Matters. My Nation Matters.”
+            </p>
+          </div>
         </div>
 
         <button

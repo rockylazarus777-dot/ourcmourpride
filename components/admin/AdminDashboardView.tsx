@@ -13,16 +13,29 @@ import {
   LogOut,
   Search,
   RefreshCw,
+  CheckCircle2,
+  Clock,
+  XCircle,
 } from "lucide-react";
 import type { RegistrationRow } from "@/types/supabase";
 import { CATEGORY_LABELS, PARTICIPANT_LABELS } from "@/types/marathon";
 
 interface Stats {
   totalRegistrations: number;
+  paidCount: number;
+  pendingCount: number;
+  failedCount: number;
   physicalCount: number;
   eParticipantCount: number;
   checkedInCount: number;
 }
+
+/** Admin-table-specific display text for the upcoming-events interest field — distinct from the registration form's own copy. */
+const INTEREST_DISPLAY_LABELS: Record<string, string> = {
+  yes: "Yes",
+  maybe: "Maybe / Keep me informed",
+  no: "No",
+};
 
 function StatCard({
   icon: Icon,
@@ -52,6 +65,7 @@ export default function AdminDashboardView() {
   const [registrations, setRegistrations] = useState<RegistrationRow[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [participantType, setParticipantType] = useState("");
   const [paymentStatus, setPaymentStatus] = useState("");
@@ -96,6 +110,17 @@ export default function AdminDashboardView() {
   useEffect(() => {
     loadRegistrations();
   }, [loadRegistrations]);
+
+  // Debounce the free-text search input ~300ms before it triggers a fetch,
+  // so typing doesn't fire a request per keystroke. The other filters are
+  // discrete selects, so they stay immediate.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPage(1);
+      setSearch(searchInput);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   const handleLogout = async () => {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -147,6 +172,9 @@ export default function AdminDashboardView() {
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard icon={Users} label="Total Registrations" value={stats?.totalRegistrations ?? "—"} />
+        <StatCard icon={CheckCircle2} label="Paid" value={stats?.paidCount ?? "—"} />
+        <StatCard icon={Clock} label="Pending" value={stats?.pendingCount ?? "—"} />
+        <StatCard icon={XCircle} label="Failed" value={stats?.failedCount ?? "—"} />
         <StatCard icon={Medal} label="Physical Participants" value={stats?.physicalCount ?? "—"} />
         <StatCard icon={Laptop} label="E-Participants" value={stats?.eParticipantCount ?? "—"} />
         <StatCard icon={ScanLine} label="Checked In" value={stats?.checkedInCount ?? "—"} />
@@ -157,11 +185,8 @@ export default function AdminDashboardView() {
         <div className="relative flex-1 min-w-[200px]">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-navy/35" />
           <input
-            value={search}
-            onChange={(e) => {
-              setPage(1);
-              setSearch(e.target.value);
-            }}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search name, email, phone, registration ID…"
             className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-navy/15 font-inter text-sm outline-none focus:border-primary"
           />
@@ -241,6 +266,7 @@ export default function AdminDashboardView() {
                 <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Type</th>
                 <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Category</th>
                 <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Payment</th>
+                <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Interest</th>
                 <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Photo</th>
                 <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Check-in</th>
                 <th className="px-4 py-3 font-poppins font-semibold text-xs text-navy/60 uppercase">Actions</th>
@@ -249,13 +275,13 @@ export default function AdminDashboardView() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={8} className="px-4 py-8 text-center text-navy/40 font-inter">
+                  <td colSpan={9} className="px-4 py-8 text-center text-navy/40 font-inter">
                     Loading…
                   </td>
                 </tr>
               ) : registrations.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-4 py-8 text-center text-navy/40 font-inter">
+                  <td colSpan={9} className="px-4 py-8 text-center text-navy/40 font-inter">
                     No registrations found.
                   </td>
                 </tr>
@@ -286,6 +312,9 @@ export default function AdminDashboardView() {
                         {r.payment_status}
                       </span>
                     </td>
+                    <td className="px-4 py-3 font-inter text-navy/70 whitespace-nowrap">
+                      {r.interested_in_upcoming_events ? INTEREST_DISPLAY_LABELS[r.interested_in_upcoming_events] : "—"}
+                    </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       {r.photo_drive_url ? (
                         <a
@@ -304,16 +333,28 @@ export default function AdminDashboardView() {
                       {r.check_in_status ? "✅ Checked in" : "—"}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      {r.participant_type === "e_participant" && r.certificate_id && (
-                        <button
-                          type="button"
-                          onClick={() => regenerateCertificate(r.registration_id!)}
-                          disabled={regenerating === r.registration_id}
-                          className="text-xs font-poppins font-semibold text-primary hover:underline disabled:opacity-50"
-                        >
-                          {regenerating === r.registration_id ? "Regenerating…" : "Regenerate Certificate"}
-                        </button>
-                      )}
+                      <div className="flex items-center gap-3">
+                        {r.participant_type === "physical" && r.entry_pass_url && (
+                          <a
+                            href={r.entry_pass_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-poppins font-semibold text-primary hover:underline"
+                          >
+                            Download Entry Pass
+                          </a>
+                        )}
+                        {r.participant_type === "e_participant" && r.certificate_id && (
+                          <button
+                            type="button"
+                            onClick={() => regenerateCertificate(r.registration_id!)}
+                            disabled={regenerating === r.registration_id}
+                            className="text-xs font-poppins font-semibold text-primary hover:underline disabled:opacity-50"
+                          >
+                            {regenerating === r.registration_id ? "Regenerating…" : "Regenerate Certificate"}
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))

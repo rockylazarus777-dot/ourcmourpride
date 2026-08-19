@@ -40,6 +40,15 @@ export const CATEGORY_LABELS: Record<MarathonCategory, string> = {
 export type TshirtSize = "XS" | "S" | "M" | "L" | "XL" | "XXL";
 export const TSHIRT_SIZES: TshirtSize[] = ["XS", "S", "M", "L", "XL", "XXL"];
 
+export const INTERESTED_IN_UPCOMING_EVENTS_VALUES = ["yes", "maybe", "no"] as const;
+export type InterestedInUpcomingEvents = (typeof INTERESTED_IN_UPCOMING_EVENTS_VALUES)[number];
+
+export const INTERESTED_IN_UPCOMING_EVENTS_LABELS: Record<InterestedInUpcomingEvents, string> = {
+  yes: "Yes, I'm interested",
+  maybe: "Maybe / Keep me informed",
+  no: "No, not at this time",
+};
+
 /** In-memory / sessionStorage state carried across the multi-page flow. */
 export interface MarathonDraftState {
   participantType: ParticipantType | null;
@@ -56,6 +65,7 @@ export interface MarathonDraftState {
   tshirtSize: TshirtSize | "";
   emergencyContactName: string;
   emergencyContactPhone: string;
+  interestedInUpcomingEvents: InterestedInUpcomingEvents | "";
   draftId: number | null;
   /** Signed proof that this browser completed the OTP-gated registration for draftId — required by the registration-status API. */
   statusToken: string | null;
@@ -83,6 +93,7 @@ export const INITIAL_MARATHON_DRAFT: MarathonDraftState = {
   tshirtSize: "",
   emergencyContactName: "",
   emergencyContactPhone: "",
+  interestedInUpcomingEvents: "",
   draftId: null,
   statusToken: null,
   photoDriveFileId: null,
@@ -136,6 +147,8 @@ export interface RegisterRequest {
   tshirtSize: TshirtSize;
   emergencyContactName: string;
   emergencyContactPhone: string;
+  /** Optional — null if the participant skipped this question. */
+  interestedInUpcomingEvents: InterestedInUpcomingEvents | null;
 }
 export interface RegisterResponse {
   draftId: number;

@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
     tshirt_size: data.tshirtSize,
     emergency_contact_name: data.emergencyContactName,
     emergency_contact_phone: data.emergencyContactPhone,
+    interested_in_upcoming_events: data.interestedInUpcomingEvents,
     pledge_accepted: true,
     otp_verified: true,
     payment_amount: amount,
