@@ -22,15 +22,15 @@ export async function POST(req: NextRequest) {
   }
 
   const amount = PARTICIPANT_FEES[data.participantType];
+  const supabase = createSupabaseAdminClient();
 
-  const insert: RegistrationInsert = {
+  const fields = {
     participant_type: data.participantType,
     full_name: data.fullName,
     age: data.age,
     gender: data.gender,
     blood_group: data.bloodGroup,
     phone: data.phone,
-    email: data.email,
     city: data.city,
     category: data.category,
     tshirt_size: data.tshirtSize,
@@ -39,10 +39,35 @@ export async function POST(req: NextRequest) {
     pledge_accepted: true,
     otp_verified: true,
     payment_amount: amount,
-    payment_status: "pending",
   };
 
-  const supabase = createSupabaseAdminClient();
+  // A pending registration for this email already exists (e.g. the
+  // participant re-submitted the form, or retried after an earlier
+  // abandoned attempt) — reuse it instead of creating a duplicate row.
+  // Payment matching keys off (email, participant_type), so a second
+  // draft for the same address would just fragment that lookup.
+  const { data: existingRows } = await supabase
+    .from("registrations")
+    .select("id")
+    .eq("email", data.email)
+    .eq("payment_status", "pending")
+    .order("created_at", { ascending: false })
+    .limit(1);
+  const existing = existingRows?.[0] ?? null;
+
+  if (existing) {
+    const { error } = await supabase.from("registrations").update(fields).eq("id", existing.id);
+    if (error) {
+      return NextResponse.json<ApiErrorResponse>({ error: "Failed to update registration. Please try again." }, { status: 500 });
+    }
+    return NextResponse.json<RegisterResponse>({
+      draftId: existing.id,
+      amount,
+      statusToken: createRegistrationStatusToken(existing.id),
+    });
+  }
+
+  const insert: RegistrationInsert = { ...fields, email: data.email, payment_status: "pending" };
   const { data: row, error } = await supabase
     .from("registrations")
     .insert(insert)

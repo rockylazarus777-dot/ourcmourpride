@@ -259,6 +259,14 @@ export default function PaymentView() {
           </div>
         </div>
 
+        <div className="bg-orange-50 border border-primary/20 rounded-xl p-4 mb-6">
+          <p className="font-inter text-xs text-navy/70 leading-relaxed">
+            Registered email: <span className="font-semibold text-navy">{draft.email}</span>
+            <br />
+            Please use the same email address you used during registration when completing your Razorpay payment.
+          </p>
+        </div>
+
         {error && (
           <p role="alert" className="text-red-500 text-sm font-inter text-center bg-red-50 px-4 py-3 rounded-xl mb-4">
             {error}

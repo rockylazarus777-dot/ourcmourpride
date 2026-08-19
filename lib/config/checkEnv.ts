@@ -31,10 +31,16 @@ export function checkRequiredEnv(): EnvCheckGroup[] {
     {
       group: "Razorpay",
       vars: {
+        // Old Order/Checkout flow — untouched, kept for local/test/rollback use.
         RAZORPAY_KEY_ID: status(process.env.RAZORPAY_KEY_ID),
         RAZORPAY_KEY_SECRET: status(process.env.RAZORPAY_KEY_SECRET),
         NEXT_PUBLIC_RAZORPAY_KEY_ID: status(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID),
         RAZORPAY_WEBHOOK_SECRET: status(process.env.RAZORPAY_WEBHOOK_SECRET),
+        // Static Dashboard Payment Links — the live registration flow.
+        RAZORPAY_PHYSICAL_PAYMENT_LINK_ID: status(process.env.RAZORPAY_PHYSICAL_PAYMENT_LINK_ID),
+        RAZORPAY_PHYSICAL_PAYMENT_LINK_URL: status(process.env.RAZORPAY_PHYSICAL_PAYMENT_LINK_URL),
+        RAZORPAY_EPARTICIPANT_PAYMENT_LINK_ID: status(process.env.RAZORPAY_EPARTICIPANT_PAYMENT_LINK_ID),
+        RAZORPAY_EPARTICIPANT_PAYMENT_LINK_URL: status(process.env.RAZORPAY_EPARTICIPANT_PAYMENT_LINK_URL),
       },
     },
     {
