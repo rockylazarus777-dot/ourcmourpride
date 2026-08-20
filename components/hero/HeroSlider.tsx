@@ -19,12 +19,12 @@ export interface HeroSlide {
 const defaultSlides: HeroSlide[] = [
   {
     id: 1,
-    imageSrc: "/images/cm1.png",
+    imageSrc: "/images/our_cm_1600x650.png",
     alt: "My CM My Pride Banner 1",
   },
   {
     id: 2,
-    imageSrc: "/images/our_cm_1600x650.png",
+    imageSrc: "/images/cm1.png",
     alt: "My CM My Pride Banner 2",
   }
 ];
@@ -73,39 +73,39 @@ export default function HeroSlider({
         }}
         className={`w-full ${sliderHeightClass}`}
       >
-        {slides.map((slide) => {
-          const image = (
-            <Image
-              src={slide.imageSrc}
-              alt={slide.alt}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-[center_56%]"
-            />
-          );
-
-          // Only the Mega Marathon banner is clickable — it links straight
-          // to registration. Other slides render as before (plain, non-link).
-          const isMarathonBanner = slide.imageSrc === "/images/our_cm_1600x650.png";
-
-          return (
-            <SwiperSlide key={slide.id}>
-              {isMarathonBanner ? (
-                <Link
-                  href="/events/marathon/register"
-                  className="relative block w-full h-full cursor-pointer"
-                  aria-label="Register for Our CM Our Pride Mega Marathon 2026"
-                >
-                  {image}
-                </Link>
-              ) : (
-                <div className="relative w-full h-full">{image}</div>
-              )}
-            </SwiperSlide>
-          );
-        })}
+        {slides.map((slide) => (
+          <SwiperSlide key={slide.id}>
+            <div className="relative w-full h-full">
+              <Image
+                src={slide.imageSrc}
+                alt={slide.alt}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover object-[center_56%]"
+              />
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
+
+      {/* Registration CTA — deliberately placed below the banner rather
+          than overlaid on it: both slide images are densely packed
+          edge-to-edge (title, date/time/location, a full-width icon
+          strip along the bottom, the person on the left), so there is
+          no crop-safe zone at any breakpoint to place a button over
+          without covering real content. A single static CTA here also
+          avoids flicker as the slider auto-rotates between images. */}
+      {variant === "default" && (
+        <div className="flex justify-center px-4 mt-4 sm:mt-6 md:mt-8">
+          <Link
+            href="/events/marathon/register"
+            className="inline-flex items-center justify-center max-w-[calc(100%-32px)] rounded-lg sm:rounded-xl bg-primary px-5 py-2.5 sm:px-7 sm:py-3.5 font-poppins font-bold text-xs sm:text-sm md:text-base text-white text-center shadow-orange transition-all duration-200 hover:bg-orange-600 hover:scale-[1.02] active:scale-95"
+          >
+            Register for Mega Marathon 2026
+          </Link>
+        </div>
+      )}
     </section>
   );
 }
