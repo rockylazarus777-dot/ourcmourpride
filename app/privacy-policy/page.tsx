@@ -181,9 +181,7 @@ const sections = [
     list: [
       "Email: infoourcmourpride@gmail.com",
       "Phone: +91 63822 07898",
-      "Address: The Great Indian Movement 
-NO; 73A, 13th Street Ram Nagar South,
-Madipakkam, Chennai - 600091 – 600018, Tamil Nadu, India",
+      "Address: The Great Indian Movement NO; 73A, 13th Street Ram Nagar South, Madipakkam, Chennai - 600091 – 600018, Tamil Nadu, India",
       "Office Hours: Monday – Saturday, 9:00 AM to 6:00 PM IST",
     ],
   },
