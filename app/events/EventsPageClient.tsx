@@ -16,9 +16,9 @@ export default function EventsPageClient() {
       <Navbar />
       <div className="pt-16 md:pt-20">
         <EventsHeroSlider />
+        <EventCard />
         <EventsIntroSection />
         <EventsStatsSection />
-        <EventCard />
         <EventsGridSection />
         <EventCategoriesSection />
         <EventsCTASection />

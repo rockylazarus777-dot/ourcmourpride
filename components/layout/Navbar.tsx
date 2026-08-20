@@ -20,7 +20,7 @@ const navLinks = [
 
 const socialLinks = [
   { icon: Facebook, href: "https://www.facebook.com/profile.php?id=100070522891863&sk=directory_links", label: "Facebook" },
-  { icon: Instagram, href: "https://www.instagram.com/ourcmourpride_off?igsh=MWQ0b3kzOWpvYWNpYg==", label: "Instagram" },
+  { icon: Instagram, href: "https://www.instagram.com/ourcmourpride", label: "Instagram" },
 ];
 
 export default function Navbar() {

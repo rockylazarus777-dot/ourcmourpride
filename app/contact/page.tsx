@@ -11,7 +11,7 @@ const contactDetails = [
     icon: MapPin,
     title: "Office Location",
     description:
-      "41/109, Pillayar Kovil Street, Teynampet, Chennai – 600018, Tamil Nadu, India. Visit us for program support, public feedback, and official requests.",
+      "NO; 73A, 13th Street Ram Nagar South,Madipakkam, Chennai - 600091 , Tamil Nadu, India. Visit us for program support, public feedback, and official requests.",
   },
   {
     icon: Phone,

@@ -4,13 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, MapPin, Medal, Laptop } from "lucide-react";
+import { ArrowRight, Medal, Laptop } from "lucide-react";
 import { useMarathonRegistration } from "./MarathonRegistrationProvider";
 import {
-  MARATHON_EVENT_NAME,
-  MARATHON_EVENT_DATE_DISPLAY,
   MARATHON_REG_CLOSE_DATE_DISPLAY,
-  MARATHON_VENUE,
   PARTICIPANT_FEES,
   type ParticipantType,
 } from "@/types/marathon";
@@ -46,63 +43,17 @@ export default function RegisterView() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-marathon-gradient">
-        <div className="absolute inset-0 opacity-15">
-          <Image src="/images/running 2.png" alt="" fill priority className="object-cover" />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/20 to-transparent" />
-
-        <div className="container-max relative z-10 py-16 sm:py-24 text-center">
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/25 rounded-full px-4 py-1.5 mb-5"
-          >
-            <span className="w-1.5 h-1.5 bg-gold-400 rounded-full animate-pulse" />
-            <span className="font-poppins font-semibold text-xs text-white tracking-wide">
-              Registrations Open
-            </span>
-          </motion.span>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="font-poppins font-black text-3xl sm:text-5xl text-white leading-tight max-w-3xl mx-auto"
-          >
-            {MARATHON_EVENT_NAME}
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="font-inter text-white/85 text-sm sm:text-base mt-4 max-w-xl mx-auto"
-          >
-            A flagship 5 KM community run by the Great Indian Movement (GIM) — celebrating
-            fitness, unity, and pride in Tamil Nadu.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-wrap items-center justify-center gap-3 mt-7"
-          >
-            <span className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-white text-xs font-poppins font-semibold px-3.5 py-2 rounded-full border border-white/20">
-              <Calendar size={13} />
-              {MARATHON_EVENT_DATE_DISPLAY}
-            </span>
-            <span className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-white text-xs font-poppins font-semibold px-3.5 py-2 rounded-full border border-white/20">
-              <MapPin size={13} />
-              {MARATHON_VENUE}
-            </span>
-            <span className="inline-flex items-center gap-1.5 bg-gold-400 text-navy text-xs font-poppins font-bold px-3.5 py-2 rounded-full">
-              5 KM Run
-            </span>
-          </motion.div>
-        </div>
+      {/* Hero — register.png only, no text/overlay on top of it */}
+      <section className="w-full overflow-hidden">
+        <Image
+          src="/images/register.png"
+          alt="Our CM Our Pride – Mega Marathon 2026"
+          width={2081}
+          height={756}
+          priority
+          sizes="100vw"
+          className="w-full h-auto block"
+        />
       </section>
 
       {/* Cards */}

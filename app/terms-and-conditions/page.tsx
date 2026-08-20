@@ -22,7 +22,9 @@ const sections = [
     title: "About Our CM Our Pride",
     content: [
       "Our CM Our Pride is a civic engagement and community development initiative dedicated to celebrating visionary leadership, inclusive governance, and the collective aspirations of the citizens of Tamil Nadu. The platform serves as a bridge between communities and public policy, highlighting developmental efforts, social welfare initiatives, youth empowerment, environmental sustainability, and economic growth across the state.",
-      "The Website is operated by Our CM Our Pride from Chennai, Tamil Nadu, India. Our registered office is located at 41/109, Pillayar Kovil Street, Teynampet, Chennai – 600018, Tamil Nadu, India.",
+      "The Website is operated by Our CM Our Pride from Chennai, Tamil Nadu, India. Our registered office is located at The Great Indian Movement 
+NO; 73A, 13th Street Ram Nagar South,
+Madipakkam, Chennai - 600091 – 600018, Tamil Nadu, India.",
     ],
   },
   {
@@ -197,7 +199,9 @@ const sections = [
     list: [
       "Email: infoourcmourpride@gmail.com",
       "Phone: +91 63822 07898",
-      "Address: 41/109, Pillayar Kovil Street, Teynampet, Chennai – 600018, Tamil Nadu, India",
+      "Address: The Great Indian Movement 
+NO; 73A, 13th Street Ram Nagar South,
+Madipakkam, Chennai - 600091 – 600018, Tamil Nadu, India",
       "Office Hours: Monday – Saturday, 9:00 AM to 6:00 PM IST",
     ],
   },
