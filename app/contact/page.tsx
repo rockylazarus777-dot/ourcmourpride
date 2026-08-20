@@ -11,7 +11,7 @@ const contactDetails = [
     icon: MapPin,
     title: "Office Location",
     description:
-      "NO; 73A, 13th Street Ram Nagar South,Madipakkam, Chennai - 600091 , Tamil Nadu, India. Visit us for program support, public feedback, and official requests.",
+      "NO; 73A, 13th Street Ram Nagar South, Madipakkam, Chennai - 600091. Visit us for program support, public feedback, and official requests.",
   },
   {
     icon: Phone,
@@ -89,10 +89,10 @@ export default function ContactPage() {
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div className="rounded-[28px] border border-primary/15 bg-white p-7 shadow-card">
                     <p className="text-sm uppercase tracking-[0.3em] text-primary font-bold mb-3">Office Location</p>
-                    <p className="font-semibold text-navy text-xl mb-3">41/109, Pillayar Kovil Street</p>
+                    <p className="font-semibold text-navy text-xl mb-3">NO; 73A, 13th Street Ram Nagar South</p>
                     <p className="text-sm leading-7 text-slate-600">
-                      Teynampet,
-                      <br />Chennai – 600018,
+                      Madipakkam,
+                      <br />Chennai - 600091,
                       <br />Tamil Nadu, India
                     </p>
                   </div>
@@ -153,9 +153,9 @@ export default function ContactPage() {
                           <div>
                             <p className="text-[0.65rem] uppercase tracking-[0.32em] text-primary mb-2">ADDRESS</p>
                             <address className="not-italic font-semibold text-slate-900 text-lg leading-8">
-                              41/109, Pillayar Kovil Street
-                              <br />Teynampet
-                              <br />Chennai – 600018
+                              NO; 73A, 13th Street Ram Nagar South
+                              <br />Madipakkam
+                              <br />Chennai - 600091
                               <br />Tamil Nadu, India
                             </address>
                           </div>
@@ -335,8 +335,8 @@ export default function ContactPage() {
             <div className="mt-12 grid gap-8 xl:grid-cols-[1.3fr_0.7fr] items-start">
               <div className="overflow-hidden rounded-[2rem] border border-slate-200 shadow-card">
                 <iframe
-                  title="Teynampet, Chennai map"
-                  src="https://www.google.com/maps?q=Teynampet,+Chennai+600018&output=embed"
+                  title="Madipakkam, Chennai map"
+                  src="https://www.google.com/maps?q=Madipakkam,+Chennai+600091&output=embed"
                   className="h-[420px] w-full border-0"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
@@ -346,26 +346,26 @@ export default function ContactPage() {
               <div className="space-y-6 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-card">
                 <div>
                   <p className="text-sm uppercase tracking-[0.32em] text-primary font-bold mb-2">Visiting address</p>
-                  <p className="font-semibold text-navy text-xl">41/109, Pillayar Kovil Street</p>
+                  <p className="font-semibold text-navy text-xl">NO; 73A, 13th Street Ram Nagar South</p>
                 </div>
 
                 <div className="space-y-4 text-sm text-slate-600 leading-7">
                   <p>
-                    Teynampet, Chennai – 600018. Our office is located in the central city district with easy access from nearby transport and civic amenities.
+                    Madipakkam, Chennai - 600091. Our office is located with easy access from nearby transport and civic amenities.
                   </p>
                   <p>
-                    Nearby landmark: Teynampet Bus Depot and Anna Nagar West. Our welcome desk provides direct support for visitor enquiries.
+                    Our welcome desk provides direct support for visitor enquiries.
                   </p>
                 </div>
 
                 <div className="grid gap-4">
                   <div className="rounded-3xl bg-slate-50 p-5">
                     <p className="text-xs uppercase tracking-[0.3em] text-slate-500 mb-2">Public transit</p>
-                    <p className="font-semibold text-navy">Nearest Metro: Teynampet</p>
+                    <p className="font-semibold text-navy">Well connected by local bus routes</p>
                   </div>
                   <div className="rounded-3xl bg-slate-50 p-5">
                     <p className="text-xs uppercase tracking-[0.3em] text-slate-500 mb-2">Parking</p>
-                    <p className="font-semibold text-navy">Local street and civic parking available near Teynampet.</p>
+                    <p className="font-semibold text-navy">Local street and civic parking available near Madipakkam.</p>
                   </div>
                 </div>
               </div>
