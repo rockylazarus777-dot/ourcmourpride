@@ -47,6 +47,43 @@ function shell(bodyHtml: string, preheader: string): string {
 </html>`;
 }
 
+/** Escapes text pulled from a public form before it's embedded in HTML. */
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+export function contactNotificationTemplate(params: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}): string {
+  const name = escapeHtml(params.name);
+  const email = escapeHtml(params.email);
+  const subject = escapeHtml(params.subject);
+  // Preserve line breaks in the message body; everything else is escaped first.
+  const message = escapeHtml(params.message).replace(/\n/g, "<br/>");
+  const body = `
+    <p>New message from the website contact form.</p>
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:20px 0;background:${BRAND.bg};border-radius:12px;">
+      <tr><td style="padding:16px 20px;">
+        <p style="margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:${BRAND.maroon};font-weight:700;">From</p>
+        <p style="margin:0 0 12px;font-size:16px;font-weight:700;color:${BRAND.navy};">${name} &lt;${email}&gt;</p>
+        <p style="margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:${BRAND.maroon};font-weight:700;">Subject</p>
+        <p style="margin:0;font-size:16px;font-weight:700;color:${BRAND.navy};">${subject}</p>
+      </td></tr>
+    </table>
+    <p style="white-space:pre-wrap;">${message}</p>
+    <p style="margin-top:24px;color:#64748b;font-size:12px;">Reply directly to this email to respond to ${name}.</p>
+  `;
+  return shell(body, `New contact form message from ${name}`);
+}
+
 export function otpEmailTemplate(otp: string): string {
   const body = `
     <p>Hello,</p>

@@ -206,6 +206,14 @@ export interface RegistrationStatusResponse {
 
 export interface ApiErrorResponse {
   error: string;
+  /** Explicit failure flag — currently only set on EMAIL_TEMPORARILY_UNAVAILABLE (503). */
+  success?: false;
+  /** Machine-readable reason (e.g. "OTP_RATE_LIMITED", "EMAIL_TEMPORARILY_UNAVAILABLE"). */
+  code?: string;
+  /** Seconds the client should wait before retrying — only set alongside OTP_RATE_LIMITED. */
+  retryAfter?: number;
+  /** Same text as `error` — present alongside retryAfter for API consumers that prefer this shape. */
+  message?: string;
 }
 
 export type RegistrationSummary = Pick<

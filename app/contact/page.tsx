@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/sections/Footer";
 import SectionHeading from "@/components/ui/SectionHeading";
 import CTASection from "@/components/sections/CTASection";
+import ContactForm from "@/components/contact/ContactForm";
 
 const contactDetails = [
   {
@@ -209,55 +210,7 @@ export default function ContactPage() {
                 />
 
                 <div className="mt-10 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-card">
-                  <form action="#" method="post" className="space-y-6">
-                    <div className="grid gap-6 md:grid-cols-2">
-                      <label className="block">
-                        <span className="text-sm font-medium text-slate-700">Full name</span>
-                        <input
-                          type="text"
-                          name="name"
-                          placeholder="Your name"
-                          className="mt-3 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm text-navy outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
-                        />
-                      </label>
-                      <label className="block">
-                        <span className="text-sm font-medium text-slate-700">Email address</span>
-                        <input
-                          type="email"
-                          name="email"
-                          placeholder="you@example.com"
-                          className="mt-3 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm text-navy outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
-                        />
-                      </label>
-                    </div>
-
-                    <label className="block">
-                      <span className="text-sm font-medium text-slate-700">Subject</span>
-                      <input
-                        type="text"
-                        name="subject"
-                        placeholder="What would you like to discuss?"
-                        className="mt-3 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm text-navy outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
-                      />
-                    </label>
-
-                    <label className="block">
-                      <span className="text-sm font-medium text-slate-700">Message</span>
-                      <textarea
-                        name="message"
-                        rows={6}
-                        placeholder="Share your request, feedback, or question here."
-                        className="mt-3 w-full rounded-[1.75rem] border border-slate-200 bg-slate-50 px-5 py-4 text-sm text-navy outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
-                      />
-                    </label>
-
-                    <button
-                      type="submit"
-                      className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white shadow-lg shadow-orange/20 transition hover:bg-orange-600"
-                    >
-                      Send message
-                    </button>
-                  </form>
+                  <ContactForm />
                 </div>
               </div>
 

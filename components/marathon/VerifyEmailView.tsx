@@ -19,6 +19,8 @@ export default function VerifyEmailView() {
   const [error, setError] = useState("");
   const [cooldown, setCooldown] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const sendInFlightRef = useRef(false);
+  const verifyInFlightRef = useRef(false);
 
   useEffect(() => {
     if (hydrated && !draft.participantType) {
@@ -54,11 +56,16 @@ export default function VerifyEmailView() {
   };
 
   const sendOtp = async () => {
+    // Guards a fast double-click / Enter-key repeat that fires before the
+    // `loading` state re-render commits — server-side rate limiting is the
+    // real gate, this just avoids firing an obviously-redundant request.
+    if (sendInFlightRef.current || cooldown > 0) return;
     setError("");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError("Enter a valid email address.");
       return;
     }
+    sendInFlightRef.current = true;
     setLoading(true);
     try {
       const res = await fetch("/api/marathon/otp/send", {
@@ -67,26 +74,36 @@ export default function VerifyEmailView() {
         body: JSON.stringify({ email }),
       });
       const data = (await res.json()) as OtpSendResponse | ApiErrorResponse;
-      if (!res.ok || !("success" in data)) {
+
+      if (res.status === 429 && "retryAfter" in data && typeof data.retryAfter === "number") {
+        setError(data.message ?? data.error ?? "Please wait before requesting another code.");
+        startCooldown(data.retryAfter);
+        return;
+      }
+
+      if (!res.ok || data.success !== true) {
         setError("error" in data ? data.error : "Failed to send code.");
         return;
       }
       updateDraft({ email });
       setStage("otp");
-      startCooldown(60);
+      startCooldown(30);
     } catch {
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
+      sendInFlightRef.current = false;
     }
   };
 
   const verifyOtp = async () => {
+    if (verifyInFlightRef.current) return;
     setError("");
     if (!/^\d{6}$/.test(otp)) {
       setError("Enter the 6-digit code.");
       return;
     }
+    verifyInFlightRef.current = true;
     setLoading(true);
     try {
       const res = await fetch("/api/marathon/otp/verify", {
@@ -95,7 +112,7 @@ export default function VerifyEmailView() {
         body: JSON.stringify({ email, otp }),
       });
       const data = (await res.json()) as OtpVerifyResponse | ApiErrorResponse;
-      if (!res.ok || !("success" in data)) {
+      if (!res.ok || data.success !== true) {
         setError("error" in data ? data.error : "Invalid code.");
         return;
       }
@@ -105,6 +122,7 @@ export default function VerifyEmailView() {
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
+      verifyInFlightRef.current = false;
     }
   };
 
@@ -145,11 +163,11 @@ export default function VerifyEmailView() {
             <button
               type="button"
               onClick={sendOtp}
-              disabled={loading}
+              disabled={loading || cooldown > 0}
               className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-maroon-600 to-primary text-white font-poppins font-bold text-sm tracking-widest uppercase py-4 rounded-xl hover:brightness-110 transition-all duration-300 shadow-orange disabled:opacity-70"
             >
               {loading ? <Loader2 size={16} className="animate-spin" /> : null}
-              Send Code
+              {cooldown > 0 ? `Wait ${cooldown}s` : "Send Code"}
             </button>
           </div>
         ) : (

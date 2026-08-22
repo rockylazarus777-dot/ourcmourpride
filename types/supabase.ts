@@ -175,6 +175,24 @@ export interface Database {
         Update: Partial<Omit<Database["public"]["Tables"]["otp_verifications"]["Insert"], "id">>;
         Relationships: [];
       };
+
+      /** Backing store for check_and_touch_otp_rate_limit — one row per (scope:identifier:window). */
+      otp_rate_limit_counters: {
+        Row: {
+          key: string;
+          window_start: string;
+          count: number;
+          updated_at: string;
+        };
+        Insert: {
+          key: string;
+          window_start: string;
+          count: number;
+          updated_at?: string;
+        };
+        Update: Partial<Omit<Database["public"]["Tables"]["otp_rate_limit_counters"]["Insert"], "key">>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -185,6 +203,16 @@ export interface Database {
       next_certificate_id: {
         Args: Record<string, never>;
         Returns: string;
+      };
+      /** Atomic, layered OTP-send rate limiter — see migration 20260822000000. */
+      check_and_touch_otp_rate_limit: {
+        Args: { p_email: string; p_ip: string };
+        Returns: { allowed: boolean; code: string | null; retry_after_seconds: number }[];
+      };
+      /** Atomic OTP-verify attempt reservation — see migration 20260822020000. */
+      reserve_otp_verification_attempt: {
+        Args: { p_email: string; p_max_attempts: number };
+        Returns: { allowed: boolean; new_attempts: number | null }[];
       };
     };
     Enums: {
