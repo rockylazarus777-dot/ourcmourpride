@@ -140,9 +140,16 @@ export default function VerifyEmailView() {
             {stage === "email" ? "Verify Your Email" : "Enter Verification Code"}
           </h1>
           <p className="font-inter text-navy/55 text-sm">
-            {stage === "email"
-              ? "We'll send a 6-digit code to confirm your email address."
-              : `We sent a code to ${email}`}
+              {stage === "email" ? (
+                "We'll send a 6-digit code to confirm your email address."
+              ) : (
+                <>
+                  We sent a code to {email}.{" "}
+                  <strong className="font-bold text-primary bg-primary/10 px-1 rounded">
+                    Please Check your spam folder if you don&apos;t see it in your inbox.
+                  </strong>
+                </>
+              )}
           </p>
         </div>
 
